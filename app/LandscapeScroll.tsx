@@ -225,7 +225,7 @@ export default function LandscapeScroll() {
   );
 
   return (
-    <section ref={root} className="relative h-svh w-full overflow-hidden bg-forest motion-reduce:h-auto">
+    <section ref={root} className="relative h-lvh w-full overflow-hidden bg-forest motion-reduce:h-auto">
       {FUTURE_LAB && (
         <svg aria-hidden className="pointer-events-none absolute h-0 w-0">
           <filter id="future-lab" colorInterpolationFilters="sRGB">
@@ -264,9 +264,9 @@ export default function LandscapeScroll() {
           {/* soft top edge for the navigation */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(20_32_26/0.5)] to-transparent" />
           {/* soft floor so the bottom interface stays readable */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42svh] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
-            className={`ls-head pointer-events-none absolute bottom-28 left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            className={`ls-head pointer-events-none absolute bottom-[calc(100lvh-100svh+7rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
             <p className="ls-kicker ui-label text-[12px] text-bone">{s.kicker}</p>
             {s.reveal ? (
@@ -293,7 +293,7 @@ export default function LandscapeScroll() {
       <ResearchMarkers />
 
       {/* mobile: the discovery as a single field chip rising from the soil */}
-      <div aria-hidden className="pointer-events-none absolute bottom-7 left-5 z-20 h-[72px] w-[64%] md:hidden motion-reduce:hidden">
+      <div aria-hidden className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[72px] w-[64%] md:hidden motion-reduce:hidden">
         {DISCOVERY.slice(0, 6).map((d) => (
           <div key={d.id} className="mob-chip invisible absolute bottom-0 left-0 flex gap-3 opacity-0">
             <span className="relative mt-1 w-px shrink-0 bg-sage/80">

@@ -40,7 +40,7 @@ export function RestorationSignal() {
 
 export function ChapterIndicator() {
   return (
-    <div className="hud-chapter pointer-events-none absolute bottom-6 right-5 z-20 select-none text-right md:bottom-8 md:right-14 motion-reduce:hidden">
+    <div className="hud-chapter pointer-events-none absolute bottom-[calc(100lvh-100svh+1.5rem)] right-5 z-20 select-none text-right md:bottom-8 md:right-14 motion-reduce:hidden">
       <p className="ui-label hidden text-bone/90 md:block">FIELD SEQUENCE</p>
       <p className="ui-label mt-1 text-[13px] text-bone tabular-nums">
         <span className="hud-chapter-num">01</span>
