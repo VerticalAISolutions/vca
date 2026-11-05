@@ -1,4 +1,5 @@
 import LandscapeScroll from "./LandscapeScroll";
+import FounderSection from "./components/FounderSection";
 import MissionSection from "./components/MissionSection";
 import PartnerSection from "./components/PartnerSection";
 import SiteNav from "./components/SiteNav";
@@ -10,6 +11,7 @@ export default function Home() {
       <SiteNav />
       <LandscapeScroll />
       <MissionSection />
+      <FounderSection />
       <PartnerSection />
     </main>
   );

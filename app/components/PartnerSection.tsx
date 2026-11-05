@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Logo from "./Logo";
 
-// TODO: echte Kontaktadresse eintragen. Leer = Mailprogramm öffnet sich ohne Empfänger.
-const CONTACT_EMAIL = "";
+// Restoration partner enquiries
+const CONTACT_EMAIL = "hello@steadymade.ai";
 
 const WAYS = [
   { key: "Land", title: "LAND", copy: "Make space for their return." },
@@ -94,7 +94,7 @@ export default function PartnerSection() {
             {copied ? "Copied to clipboard" : "Copy message instead"}
           </button>
           <p className="text-sm text-bone/60" aria-live="polite">
-            Opens a prepared email · {picked.length ? interest : "select one or more ways to contribute"}
+            Opens a prepared email to {CONTACT_EMAIL} · {picked.length ? interest : "select one or more ways to contribute"}
           </p>
         </div>
       </div>
