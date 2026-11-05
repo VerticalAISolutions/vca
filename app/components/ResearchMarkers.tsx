@@ -8,57 +8,12 @@
 // hovering a point opens a field note with more context.
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FieldNote, NOTES } from "./FieldNote";
 
 const W = 1672;
 const H = 941;
 
-// at: which element the note attaches to · side: where it opens, chosen per object
-// so the note never covers what it describes
-type Note = { kicker: string; title: string; body: string; at?: "dot" | "box"; side?: "left" | "right"; up?: boolean; gap?: number; pos?: [number, number] };
-
-const NOTES: Record<string, Note> = {
-  trace: {
-    kicker: "Field note / 02",
-    title: "Hoof imprints",
-    body: "Fresh tracks in dry ground. Heavy grazers press seeds into the soil and leave small hollows where rainwater collects.",
-    side: "left",
-  },
-  bull: {
-    kicker: "Field note / 01 · Reintroduced species",
-    title: "Bos primigenius · Aurochs",
-    body: "The wild ancestor of cattle, extinct since 1627. Grazing and trampling keep landscapes open, so light reaches the ground and new plants can take hold.",
-    pos: [880, 600], // fixed spot in image px: below the animal, clear of headline and body
-  },
-  grazing: {
-    kicker: "Field note / 02 · Grazing",
-    title: "Habitat diversity",
-    body: "Uneven grazing leaves short lawns, tall tussocks and open patches side by side, so different plants and insects find their niche.",
-    side: "left",
-  },
-  roots: {
-    kicker: "Field note / 03 · Existing soil life",
-    title: "Root network",
-    body: "Grazed grasses regrow and root deeper. Dense roots hold the soil together and store water and carbon below ground.",
-  },
-  fungi: {
-    kicker: "Field note / 04 · Existing soil life",
-    title: "Mycelial network",
-    body: "Fungal threads connect plant roots with each other and move water and nutrients between them.",
-  },
-  fauna: {
-    kicker: "Field note / 05 · Existing soil life",
-    title: "Soil fauna · Woodlouse",
-    body: "Woodlice, beetles and earthworms break down dung and plant matter and keep the soil loose and full of air.",
-    side: "left",
-  },
-  decomp: {
-    kicker: "Field note / 06 · Existing soil life",
-    title: "Decomposition",
-    body: "Fallen leaves and dung are broken down by fungi and soil organisms, returning nutrients to the ground.",
-  },
-};
-
-type Hover = { id: string; x: number; y: number; flipX: boolean; flipY: boolean; gap: number; fixed?: boolean } | null;
+type Hover = { id: string; x: number; y: number; flipX: boolean; flipY: boolean; gap: number } | null;
 
 type MarkerProps = {
   id: string;
@@ -193,14 +148,6 @@ export default function ResearchMarkers() {
     const target = group?.querySelector(n?.at === "box" ? ".mk-box" : ".mk-dot");
     if (!id || !n || !target || !svgRef.current) return setHover(null);
     const box = svgRef.current.getBoundingClientRect();
-    if (n.pos) {
-      // image coordinates -> screen, through the same slice mapping as the markers
-      const ctm = svgRef.current.getScreenCTM();
-      if (ctm) {
-        const pt = new DOMPoint(n.pos[0], n.pos[1]).matrixTransform(ctm);
-        return setHover({ id, x: pt.x - box.left, y: pt.y - box.top, flipX: false, flipY: false, gap: 0, fixed: true });
-      }
-    }
     const r = target.getBoundingClientRect();
     const flipX = n.side ? n.side === "left" : r.left - box.left > box.width * 0.6;
     const x = (n.at === "box" ? (flipX ? r.left : r.right) : r.left + r.width / 2) - box.left;
@@ -262,33 +209,15 @@ export default function ResearchMarkers() {
       </svg>
 
       {note && hover ? (
-        <div
-          role="tooltip"
-          className="field-note pointer-events-none absolute z-30 hidden w-[320px] rounded-[3px] border border-sage/45 bg-forest/95 px-6 pb-5 pt-4 text-bone shadow-[0_18px_40px_-18px_rgb(0_0_0/0.6)] md:block"
+        <FieldNote
+          key={`${hover.id}-${hover.x}-${hover.y}`}
+          note={note}
           style={{
             left: hover.x,
             top: hover.y,
-            transform: hover.fixed
-              ? undefined
-              : `translate(${hover.flipX ? `calc(-100% - ${hover.gap}px)` : `${hover.gap}px`}, ${hover.flipY ? "calc(-100% + 12px)" : "-12px"})`,
+            transform: `translate(${hover.flipX ? `calc(-100% - ${hover.gap}px)` : `${hover.gap}px`}, ${hover.flipY ? "calc(-100% + 12px)" : "-12px"})`,
           }}
-        >
-          {/* crosshair corners, as in the key visual */}
-          <span aria-hidden className="absolute -left-[6px] -top-px h-px w-3 bg-bone/70" />
-          <span aria-hidden className="absolute -left-px -top-[6px] h-3 w-px bg-bone/70" />
-          <span aria-hidden className="absolute -bottom-px -right-[6px] h-px w-3 bg-bone/70" />
-          <span aria-hidden className="absolute -bottom-[6px] -right-px h-3 w-px bg-bone/70" />
-
-          <div className="flex items-center gap-3">
-            <span className="ui-label text-[10px] text-sage">{note.kicker}</span>
-            {/* node line: a thin arc ending in a point */}
-            <span aria-hidden className="relative h-px flex-1 bg-bone/25">
-              <span className="absolute -right-0.5 -top-[3px] h-[7px] w-[7px] rounded-full bg-bone" />
-            </span>
-          </div>
-          <p className="font-serif mt-4 text-[26px] leading-[1.05] text-bone">{note.title}</p>
-          <p className="mt-3 text-[14px] leading-relaxed text-bone/80">{note.body}</p>
-        </div>
+        />
       ) : null}
     </>
   );
