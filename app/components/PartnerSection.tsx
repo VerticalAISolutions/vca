@@ -105,7 +105,18 @@ export default function PartnerSection() {
           <span className="text-[12px] font-semibold tracking-[0.32em]">THE GARDENERS</span>
         </div>
         <p className="ui-label text-[10px] text-bone/50">Restoration / Research / Responsibility</p>
-        <p className="ui-label text-[10px] text-bone/40">Est. 2040 · A fictional brand for the German Vibe Code Awards</p>
+        <p className="ui-label text-[10px] text-bone/40">
+          Est. 2040 · A fictional brand by{" "}
+          <a
+            href="https://steadymade.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-bone/70 underline-offset-4 transition-colors hover:text-sage hover:underline"
+          >
+            steadymade.ai
+          </a>{" "}
+          for the German Vibe Code Awards
+        </p>
       </footer>
     </section>
   );
