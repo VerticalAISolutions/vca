@@ -1,26 +1,55 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* THE GARDENERS · brand tokens (brand board) */
+@theme {
+  --color-forest: #20372d;
+  --color-bone: #f0ede2;
+  --color-sage: #a0b38b;
+  --color-earth: #b07c55;
+  --color-forest-deep: #172821;
+
+  --font-serif: var(--font-instrument-serif), "Times New Roman", serif;
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-forest);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-forest);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+}
+
+/* small scientific labels: uppercase, wide tracking */
+.ui-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* SVG marker typography (sizes in image pixels, scaled with the image) */
+.mk-t1 {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  fill: var(--color-bone);
+}
+.mk-t2 {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  fill: var(--color-bone);
+  fill-opacity: 0.78;
+}
+
+::selection {
+  background: var(--color-sage);
+  color: var(--color-forest);
 }
