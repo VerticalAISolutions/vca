@@ -41,7 +41,7 @@ export default function VcaPage() {
         </div>
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={daten.keyVisual} alt="Key Visual: Auerochsen in einer regenerierten Aue mit lebendigem Erdreich" className="aspect-[3/2] w-full rounded-2xl object-cover" />
+        <img src={daten.keyVisual} alt="Key Visual: Auerochsen in Forest-Grün unter dem Blattsymbol der Marke, darunter Wurzeln und Pilzgeflecht als leuchtendes Netzwerk" className="aspect-[3/2] w-full rounded-2xl object-cover" />
 
         <div className="grid gap-8 md:grid-cols-2">
           <div className="flex items-center gap-5">

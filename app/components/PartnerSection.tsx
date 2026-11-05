@@ -7,27 +7,39 @@ import Logo from "./Logo";
 const CONTACT_EMAIL = "";
 
 const WAYS = [
-  { key: "Land", title: "LAND", copy: "Provide space for restoration." },
-  { key: "Knowledge", title: "KNOWLEDGE", copy: "Contribute science, research and expertise." },
-  { key: "Funding", title: "FUNDING", copy: "Help make the return possible." },
+  { key: "Land", title: "LAND", copy: "Make space for their return." },
+  { key: "Knowledge", title: "KNOWLEDGE", copy: "Contribute research and expertise." },
+  { key: "Funding", title: "FUNDING", copy: "Help turn restoration into reality." },
 ] as const;
 
 export default function PartnerSection() {
   const [picked, setPicked] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
   const toggle = (k: string) => setPicked((p) => (p.includes(k) ? p.filter((x) => x !== k) : [...p, k]));
 
   const interest = picked.length ? picked.join(", ") : "Land, Knowledge or Funding";
   const subject = `Restoration partnership: ${interest}`;
   const body = `Hello THE GARDENERS,\n\nWe would like to become a restoration partner.\nWe can contribute: ${interest}\n\nOrganisation:\nContact person:\nRegion / landscape:\n\n`;
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(`${subject}\n\n${body}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2400);
+    } catch {
+      setCopied(false);
+    }
+  };
   const href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   return (
     <section id="partner" className="relative bg-forest px-5 pb-24 pt-28 text-bone md:px-14 md:pb-32 md:pt-40">
       <div className="mx-auto max-w-6xl">
-        <p className="ui-label text-sage">Bring back what brings life.</p>
-        <h2 className="font-serif mt-6 max-w-[14ch] text-[clamp(2.8rem,6.5vw,5.75rem)] leading-[0.98]">The next chapter needs you.</h2>
-        <p className="mt-8 max-w-xl text-lg leading-relaxed text-bone/80 md:text-xl">
-          The gardeners can restore what nature has lost. Together, we can make their return possible.
+        <p className="ui-label flex items-center gap-4 text-sage">
+          The next chapter <span aria-hidden className="h-px w-10 bg-sage/50" /> Your role
+        </p>
+        <h2 className="font-serif mt-6 max-w-[13ch] text-[clamp(2.9rem,7vw,6.25rem)] leading-[0.96]">Help bring the gardeners back.</h2>
+        <p className="mt-8 max-w-xl text-lg leading-relaxed text-bone/85 md:text-xl">
+          Restoring ecosystems takes land, scientific knowledge, long-term commitment and funding. Every partner makes a difference.
         </p>
 
         <fieldset className="mt-16 md:mt-20">
@@ -74,7 +86,16 @@ export default function PartnerSection() {
               <path d="M0 6h18M13 1l5 5-5 5" />
             </svg>
           </a>
-          <p className="text-sm text-bone/55">Opens a prepared email{picked.length ? ` · ${interest}` : ""}.</p>
+          <button
+            type="button"
+            onClick={copy}
+            className="ui-label text-[11px] text-bone/70 underline decoration-bone/30 underline-offset-[6px] transition-colors hover:text-sage hover:decoration-sage focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sage"
+          >
+            {copied ? "Copied to clipboard" : "Copy message instead"}
+          </button>
+          <p className="text-sm text-bone/60" aria-live="polite">
+            Opens a prepared email · {picked.length ? interest : "select one or more ways to contribute"}
+          </p>
         </div>
       </div>
 

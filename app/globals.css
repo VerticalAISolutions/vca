@@ -32,21 +32,63 @@ body {
   line-height: 1.4;
 }
 
-/* SVG marker typography (sizes in image pixels, scaled with the image) */
+/* SVG marker typography (sizes in image pixels, scaled with the image).
+   No outlines: legibility comes from the forest label box behind the text. */
 .mk-t1 {
   font-family: var(--font-sans);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   fill: var(--color-bone);
 }
 .mk-t2 {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  fill: var(--color-sage);
+}
+
+.mk-t3 {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  fill: var(--color-bone);
+  fill-opacity: 0.86;
+}
+.mk-k {
+  font-family: var(--font-sans);
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.22em;
-  fill: var(--color-bone);
-  fill-opacity: 0.78;
+  text-transform: uppercase;
+  fill: var(--color-sage);
+}
+.mk-k-earth {
+  fill: #d1a07a;
+}
+
+/* hover affordance on research points */
+.mk-hit {
+  cursor: pointer;
+}
+.mk-ring,
+.mk-dot,
+.mk-box {
+  transition: stroke 0.3s ease, fill 0.3s ease, stroke-opacity 0.3s ease;
+}
+.mk-bull:has(.mk-hit:hover) .mk-ring,
+.mk:has(.mk-hit:hover) .mk-ring {
+  stroke: var(--color-bone);
+}
+.mk-bull:has(.mk-hit:hover) .mk-dot,
+.mk:has(.mk-hit:hover) .mk-dot {
+  fill: var(--color-sage);
+}
+.mk-bull:has(.mk-hit:hover) .mk-box,
+.mk:has(.mk-hit:hover) .mk-box {
+  stroke-opacity: 0.9;
 }
 
 ::selection {

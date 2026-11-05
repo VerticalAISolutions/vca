@@ -1,4 +1,5 @@
 import LandscapeScroll from "./LandscapeScroll";
+import MissionSection from "./components/MissionSection";
 import PartnerSection from "./components/PartnerSection";
 import SiteNav from "./components/SiteNav";
 
@@ -8,6 +9,7 @@ export default function Home() {
       <h1 className="sr-only">THE GARDENERS: bring back what brings life.</h1>
       <SiteNav />
       <LandscapeScroll />
+      <MissionSection />
       <PartnerSection />
     </main>
   );

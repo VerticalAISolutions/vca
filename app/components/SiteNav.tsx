@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Logo from "./Logo";
 
 export default function SiteNav() {
-  // solid background once the partner section reaches the nav
+  // solid background once the content sections reach the nav
   const [solid, setSolid] = useState(false);
   useEffect(() => {
-    const target = document.getElementById("partner");
+    const target = document.getElementById("approach");
     if (!target) return;
     const check = () => setSolid(target.getBoundingClientRect().top < 80);
     check();
@@ -28,7 +28,7 @@ export default function SiteNav() {
           <Logo className="h-7 w-7 text-bone md:h-8 md:w-8" />
           <span className="text-[13px] font-semibold tracking-[0.32em]">THE GARDENERS</span>
         </a>
-        <p className="ui-label hidden text-bone/80 lg:block">
+        <p className="ui-label hidden text-bone/90 lg:block">
           Field / 2040 <span className="mx-3 text-sage">·</span> Ecological observation
         </p>
         <a

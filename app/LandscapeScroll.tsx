@@ -13,18 +13,72 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 // Bildsatz wechseln: "/landscape" (Idee 1) oder "/landscape/idea2"
 const SET = "/landscape/idea2";
 
-const STATES = [
-  { src: `${SET}/state-1.png`, alt: "Stille, karge Steppe mit trockenem Boden im Querschnitt", kicker: "01 — The Silence", headline: "Nature has lost its gardeners." },
-  { src: `${SET}/state-2.png`, alt: "Erste Fußspuren im Gras, im Boden regt sich Leben", kicker: "02 — The Traces", headline: "But the land remembers." },
-  { src: `${SET}/state-3.png`, alt: "Eine Auerochsenherde kehrt in die Steppe zurück", kicker: "03 — The Return", headline: "The gardeners are coming home." },
-  { src: `${SET}/state-4.png`, alt: "Goldene Aue mit Auerochsen, darunter lebendiges, durchwurzeltes Erdreich", kicker: "04 — The Revival", headline: "When they return, life follows." },
+// Future Lab Look: Gradient-Map (Forest → Sage → Bone) als SVG-Filter auf Szene 1–4.
+// Bilddateien bleiben unverändert. false = Originalfarben.
+const FUTURE_LAB = false;
+
+type Scene = { src: string; alt: string; kicker: string; headline: string; body: string; reveal?: boolean };
+
+const STATES: Scene[] = [
+  {
+    src: `${SET}/state-1.png`,
+    alt: "Stille, karge Steppe mit trockenem Boden im Querschnitt",
+    kicker: "01 — The Silence",
+    headline: "Nature has lost its gardeners.",
+    body: "We bring back extinct animals that once shaped entire ecosystems.",
+  },
+  {
+    src: `${SET}/state-2.png`,
+    alt: "Erste Fußspuren im Gras, im Boden regt sich Leben",
+    kicker: "02 — The Traces",
+    headline: "But the land remembers.",
+    body: "Once, great wild grazers shaped these landscapes. Their disappearance left more than empty space.",
+  },
+  {
+    src: `${SET}/state-3.png`,
+    alt: "Eine Auerochsenherde kehrt in die Steppe zurück",
+    kicker: "03 — The Return",
+    headline: "Meet the gardeners.",
+    body: "These are aurochs. Extinct wild cattle that once helped shape European landscapes. We are bringing them back.",
+    reveal: true,
+  },
+  {
+    src: `${SET}/state-4.png`,
+    alt: "Goldene Aue mit Auerochsen, darunter lebendiges, durchwurzeltes Erdreich",
+    kicker: "04 — The Revival",
+    headline: "Their return is just the beginning.",
+    body: "Their grazing and movement help restart natural processes. Protected habitats, research and long-term stewardship give ecosystems the conditions to recover.",
+  },
+  {
+    src: `${SET}/state-5.png`,
+    alt: "Das Ökosystem in Forest-Grün: Auerochsen, Wurzeln und Pilzgeflecht als lebendiges Netzwerk unter dem Blattsymbol der Marke",
+    kicker: "The Gardeners · Our mission",
+    headline: "Bring back what brings life.",
+    body: "We bring back extinct species, restore protected habitats and work with scientists and conservation partners to rebuild living ecosystems.",
+  },
+];
+
+// Ecological network reveal: what the overlay shows, also rendered as text (screen readers,
+// reduced motion) and as a one-at-a-time field chip on mobile.
+const DISCOVERY = [
+  { id: "bull", kicker: "01 / Species · Reintroduced", title: "Bos primigenius", desc: "Ecosystem engineer. Extinct wild cattle, returning." },
+  { id: "grazing", kicker: "02 / Grazing", title: "Habitat diversity", desc: "Grazing helps shape varied vegetation." },
+  { id: "roots", kicker: "03 / Root system", title: "Root network", desc: "Plant roots connect vegetation and soil." },
+  { id: "fungi", kicker: "04 / Fungal networks", title: "Mycelial network", desc: "Fungi contribute to nutrient cycling." },
+  { id: "fauna", kicker: "05 / Soil biology", title: "Soil fauna", desc: "Organisms recycle organic material." },
+  { id: "decomp", kicker: "06 / Soil processes", title: "Decomposition", desc: "Organic matter returns nutrients to the soil." },
+  { id: "recovery", kicker: "07 / Restoration", title: "Ecological recovery", desc: "Connected processes support ecosystem recovery." },
 ];
 
 // Timeline in abstract units. Scene holds sit between the image crossfades.
-// S1 0–1 · T1 1–2 · S2 2–3 · T2 3–4 · S3 4–5 · T3 5–6 · S4 6–8.6
-const FADES = [1, 3, 5];
-const SCENE_EDGES = [0, 1.5, 3.5, 5.5, 8.6]; // chapter switches at the crossfade midpoints
-const TOTAL = 8.6;
+// S1 0–1 · T1 1–2 · S2 2–3 · T2 3–4 (herd arrives)
+// S3 4–6.8: reveal 4–5.4, ecological discovery starts at 5.4 on the same image
+// T3 6.8–7.8 · S4 7.8–10: discovery peaks ~8.5, overlays recede ~9.2 · T4 10–11 · S5 (mission) 11–12.2
+const FADES = [1, 3, 6.8, 10];
+const CHAPTER_EDGES = [0, 1.5, 3.5, 7.3, 10.5]; // four chapters, the mission closes chapter 04
+const CHAPTERS = CHAPTER_EDGES.length - 1;
+const TOTAL = 12.2;
+const REVEAL = STATES.findIndex((s) => s.reveal);
 
 export default function LandscapeScroll() {
   const root = useRef<HTMLElement>(null);
@@ -42,8 +96,8 @@ export default function LandscapeScroll() {
 
         const updateChapter = (t: number) => {
           let i = 0;
-          while (i < 3 && t >= SCENE_EDGES[i + 1]) i++;
-          const local = (t - SCENE_EDGES[i]) / (SCENE_EDGES[i + 1] - SCENE_EDGES[i]);
+          while (i < CHAPTERS - 1 && t >= CHAPTER_EDGES[i + 1]) i++;
+          const local = (t - CHAPTER_EDGES[i]) / (CHAPTER_EDGES[i + 1] - CHAPTER_EDGES[i]);
           fills.forEach((el, k) => gsap.set(el, { scaleX: k < i ? 1 : k === i ? Math.min(1, Math.max(0.12, local)) : 0 }));
           if (i !== shown && num) {
             shown = i;
@@ -59,52 +113,109 @@ export default function LandscapeScroll() {
             pin: true,
             scrub: 0.8,
             start: "top top",
-            end: "+=500%",
+            end: "+=740%",
             invalidateOnRefresh: true,
           },
         });
 
-        // --- images + headlines (unchanged logic, wider holds) ---
+        // --- images + headlines ---
+        const bodies = q(".ls-body");
         FADES.forEach((at, k) => {
           const i = k + 1;
-          tl.fromTo(layers[i], { opacity: 0 }, { opacity: 1, duration: 1 }, at)
-            .to(heads[i - 1], { opacity: 0, y: -16, duration: 0.45 }, at)
-            .fromTo(heads[i], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, at + 0.55);
+          tl.fromTo(layers[i], { opacity: 0 }, { opacity: 1, duration: 1 }, at).to(heads[i - 1], { opacity: 0, y: -16, duration: 0.45 }, at);
+          if (i === REVEAL) return; // staged separately below
+          tl.fromTo(heads[i], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, at + 0.55).fromTo(
+            bodies[i],
+            { opacity: 0, y: 10 },
+            { opacity: 1, y: 0, duration: 0.4 },
+            at + 0.75
+          );
         });
+
+        // --- SCENE 03 · the brand reveal ---
+        // A arrival: herd fades in · B recognition: headline · C identification: marker
+        // D explanation: body copy · E short hold · F ecological discovery (below)
+        const r = FADES[REVEAL - 1] + 1; // herd fully in
+        tl.fromTo(heads[REVEAL], { opacity: 0, y: 0 }, { opacity: 1, duration: 0.05 }, r - 0.1)
+          .fromTo(q(".ls-reveal .ls-kicker"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 }, r - 0.1)
+          .fromTo(
+            q(".ls-reveal h2"),
+            { opacity: 0, y: 44, scale: 0.94, filter: "blur(12px)", transformOrigin: "0% 100%" },
+            { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power3.out" },
+            r
+          )
+          .fromTo(bodies[REVEAL], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, r + 0.8);
 
         // --- marker helpers ---
         const markerIn = (sel: string, at: number) => {
-          tl.fromTo(q(sel), { opacity: 0 }, { opacity: 1, duration: 0.2 }, at)
+          // autoAlpha: hidden markers also stop catching the pointer
+          tl.fromTo(q(sel), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, at)
             .fromTo(q(`${sel} .mk-ring`), { scale: 0.6, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, at)
             .fromTo(q(`${sel} .mk-line`), { strokeDasharray: "1 1", strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.35 }, at + 0.1)
-            .fromTo(q(`${sel} .mk-label`), { opacity: 0 }, { opacity: 1, duration: 0.2 }, at + 0.35);
+            // the field box rises out of the ground into place
+            .fromTo(q(`${sel} .mk-label`), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, at + 0.35);
         };
-        const markerOut = (sel: string, at: number, dur = 0.3) => tl.to(q(sel), { opacity: 0, duration: dur }, at);
+        const markerOut = (sel: string, at: number, dur = 0.3) => tl.to(q(sel), { autoAlpha: 0, duration: dur }, at);
+        const understate = (sel: string, at: number) => tl.to(q(sel), { opacity: 0.28, duration: 0.3 }, at);
 
         // SCENE 02 · traces
         markerIn(".mk-trace", 2.0);
         markerOut(".mk-trace", 2.75);
 
-        // SCENE 03 · aurochs, only after the herd is fully in (layer 3 ends at 4.0)
-        markerIn(".mk-bull", 4.05);
-        tl.fromTo(q(".mk-bull .mk-brackets"), { scale: 1.04, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "power2.out" }, 4.05);
-        markerOut(".mk-bull", 5.0, 0.4);
+        // SCENE 03 · identification, right after the headline has landed
+        markerIn(".mk-bull", r + 0.45);
+        tl.fromTo(q(".mk-bull .mk-brackets"), { scale: 1.04, opacity: 0, transformOrigin: "50% 50%" }, { scale: 1, opacity: 1, duration: 0.4, ease: "power2.out" }, r + 0.45);
 
-        // SCENE 04 · below ground, staggered, then recede for a clean last look
-        markerIn(".mk-soil-1", 6.0);
-        markerIn(".mk-soil-2", 6.35);
-        markerIn(".mk-soil-3", 6.7);
-        markerOut(".mk-soil-1, .mk-soil-2, .mk-soil-3", 7.6, 0.4);
+        // --- ECOLOGICAL NETWORK REVEAL · starts on the reveal image, peaks in scene 04 ---
+        const D = r + 1.4;
+        // attention moves from the animal to the ground, then the soil horizon opens
+        tl.fromTo(q(".mk-link"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1 }, D)
+          .fromTo(q(".mk-link-drop"), { strokeDasharray: "1 1", strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.35 }, D)
+          .fromTo(q(".mk-horizon"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1 }, D + 0.3)
+          .fromTo(q(".mk-horizon-l, .mk-horizon-r"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6 }, D + 0.3)
+          .fromTo(q(".mk-horizon-t"), { opacity: 0 }, { opacity: 1, duration: 0.25 }, D + 0.65);
+        // field boxes rise from their anchors, never more than three prominent at once
+        const SEQ: [string, number][] = [
+          ["grazing", D + 0.5],
+          ["roots", D + 0.85],
+          ["fungi", FADES[2] + 0.5],
+          ["fauna", FADES[2] + 0.9],
+          ["decomp", FADES[2] + 1.3],
+        ];
+        SEQ.forEach(([id, at]) => markerIn(`.mk-${id}`, at));
+        understate(".mk-bull", SEQ[2][1]);
+        understate(".mk-grazing", SEQ[3][1]);
+        understate(".mk-roots", SEQ[4][1]);
+        markerOut(".mk-link", FADES[2], 0.4);
+        // quiet hold: overlays recede, the horizon stays as one faint connection
+        const quiet = FADES[2] + 2.4;
+        markerOut(".mk-bull, .mk-grazing, .mk-roots, .mk-fungi, .mk-fauna, .mk-decomp", quiet, 0.5);
+        tl.to(q(".mk-horizon"), { opacity: 0.35, duration: 0.5 }, quiet);
+        markerOut(".mk-horizon", FADES[3], 0.5);
 
-        // --- restoration signal: grows with the story ---
+        // mobile: one field chip at a time, same sequence
+        const chips = q(".mob-chip");
+        const chipTimes = [r + 0.45, ...SEQ.map(([, at]) => at), quiet];
+        chips.forEach((el, k) => {
+          if (k >= chipTimes.length - 1) return;
+          tl.fromTo(el, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.25 }, chipTimes[k]).to(
+            el,
+            { autoAlpha: 0, y: -8, duration: 0.2 },
+            chipTimes[k + 1] - 0.15
+          );
+        });
+
+        // --- restoration signal: grows with the story, completes at the discovery peak ---
         tl.to(q(".sig-line"), { strokeDashoffset: 0.68, duration: 1 }, FADES[0])
           .to(q(".sig-node-1"), { opacity: 1, duration: 0.25 }, FADES[0] + 0.6)
           .to(q(".sig-line"), { strokeDashoffset: 0.42, duration: 1 }, FADES[1])
           .to(q(".sig-node-2"), { opacity: 1, duration: 0.25 }, FADES[1] + 0.6)
-          .to(q(".sig-line"), { strokeDashoffset: 0, duration: 1 }, FADES[2])
-          .to(q(".sig-node-3"), { opacity: 1, duration: 0.25 }, FADES[2] + 0.5)
-          .to(q(".sig-node-4"), { opacity: 1, duration: 0.25 }, FADES[2] + 0.85)
-          .to(q(".sig-echo"), { strokeDashoffset: 0, duration: 0.8 }, FADES[2] + 0.6);
+          .to(q(".sig-line"), { strokeDashoffset: 0.2, duration: 1 }, D)
+          .to(q(".sig-node-3"), { opacity: 1, duration: 0.25 }, D + 0.7)
+          .to(q(".sig-line"), { strokeDashoffset: 0, duration: 0.9 }, FADES[2] + 0.8)
+          .to(q(".sig-echo"), { strokeDashoffset: 0, duration: 0.7 }, FADES[2] + 1.0)
+          .to(q(".sig-node-4"), { opacity: 1, duration: 0.25 }, FADES[2] + 1.6)
+          .fromTo(q(".sig-note"), { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3 }, FADES[2] + 1.7);
 
         tl.to({}, { duration: 0.01 }, TOTAL - 0.01); // final clean hold
         updateChapter(0);
@@ -115,28 +226,101 @@ export default function LandscapeScroll() {
 
   return (
     <section ref={root} className="relative h-svh w-full overflow-hidden bg-forest motion-reduce:h-auto">
+      {FUTURE_LAB && (
+        <svg aria-hidden className="pointer-events-none absolute h-0 w-0">
+          <filter id="future-lab" colorInterpolationFilters="sRGB">
+            {/* luminance */}
+            <feColorMatrix
+              type="matrix"
+              values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"
+            />
+            {/* gradient map: forest-deep → forest → moss → sage → bone */}
+            <feComponentTransfer result="graded">
+              <feFuncR type="table" tableValues="0.055 0.110 0.275 0.620 0.941" />
+              <feFuncG type="table" tableValues="0.106 0.224 0.430 0.725 0.929" />
+              <feFuncB type="table" tableValues="0.078 0.157 0.260 0.520 0.886" />
+            </feComponentTransfer>
+            {/* keep a trace of the original colour for depth */}
+            <feComposite in="graded" in2="SourceGraphic" operator="arithmetic" k1="0" k2="0.9" k3="0.1" k4="0" />
+          </filter>
+        </svg>
+      )}
       {STATES.map((s, i) => (
         <div
           key={s.src}
           className={`ls-layer absolute inset-0 motion-reduce:relative motion-reduce:h-svh ${i > 0 ? "motion-safe:opacity-0" : ""}`}
         >
-          <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes="100vw" className="object-cover object-center" />
-          {/* scrim only behind the headline */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(20_32_26/0.62)_0%,rgb(20_32_26/0.22)_38%,transparent_62%)]" />
+          <Image
+            src={s.src}
+            alt={s.alt}
+            fill
+            priority={i === 0}
+            sizes="100vw"
+            className="object-cover object-[64%_50%] md:object-center"
+            style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
+          />
+          {/* scrim only behind headline and supporting copy */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(20_32_26/0.68)_0%,rgb(20_32_26/0.3)_42%,transparent_70%)]" />
+          {/* soft top edge for the navigation */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(20_32_26/0.5)] to-transparent" />
           {/* soft floor so the bottom interface stays readable */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/45 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42svh] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
-            className={`ls-head pointer-events-none absolute left-5 right-5 top-[15svh] md:left-14 md:top-[17svh] ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            className={`ls-head pointer-events-none absolute bottom-28 left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
-            <p className="ui-label text-bone/80">{s.kicker}</p>
-            <h2 className="font-serif mt-4 max-w-[15ch] text-[clamp(2.6rem,7.2vw,6rem)] leading-[0.98] tracking-[-0.01em] text-bone [text-shadow:0_2px_28px_rgb(0_0_0/0.35)]">
-              {s.headline}
-            </h2>
+            <p className="ls-kicker ui-label text-[12px] text-bone">{s.kicker}</p>
+            {s.reveal ? (
+              // Level 1+: the brand reveal deliberately breaks the shared headline scale (~30% larger)
+              <h2 className="font-serif mt-4 text-[clamp(3.4rem,9.4vw,7.8rem)] uppercase leading-[0.9] tracking-[0.01em] text-bone [text-shadow:0_2px_36px_rgb(0_0_0/0.4)]">
+                Meet the
+                <br />
+                gardeners.
+              </h2>
+            ) : (
+              <h2 className="font-serif mt-4 max-w-[15ch] text-[clamp(2.6rem,7.2vw,6rem)] leading-[0.98] tracking-[-0.01em] text-bone [text-shadow:0_2px_28px_rgb(0_0_0/0.35)]">
+                {s.headline}
+              </h2>
+            )}
+            <p
+              className={`ls-body mt-auto max-w-[34ch] text-[clamp(1rem,1.25vw,1.2rem)] leading-[1.55] text-bone [text-shadow:0_1px_14px_rgb(0_0_0/0.55)] md:mt-7 motion-reduce:mt-6 ${s.reveal ? "md:max-w-[38ch]" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            >
+              {s.body}
+            </p>
           </div>
         </div>
       ))}
 
       <ResearchMarkers />
+
+      {/* mobile: the discovery as a single field chip rising from the soil */}
+      <div aria-hidden className="pointer-events-none absolute bottom-7 left-5 z-20 h-[72px] w-[64%] md:hidden motion-reduce:hidden">
+        {DISCOVERY.slice(0, 6).map((d) => (
+          <div key={d.id} className="mob-chip invisible absolute bottom-0 left-0 flex gap-3 opacity-0">
+            <span className="relative mt-1 w-px shrink-0 bg-sage/80">
+              <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-sage bg-bone" />
+            </span>
+            <span className="block rounded-[2px] border border-sage/45 bg-forest/95 px-3 py-2">
+              <span className={`ui-label block text-[9px] ${d.id === "bull" ? "text-[#d1a07a]" : "text-sage"}`}>{d.kicker}</span>
+              <span className="mt-0.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-bone">{d.title}</span>
+              <span className="mt-0.5 block text-[12px] leading-snug text-bone/80">{d.desc}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* the same field notes as text: screen readers always, visible when motion is reduced */}
+      <section aria-label="Field observations" className="sr-only motion-reduce:not-sr-only motion-reduce:bg-forest motion-reduce:px-5 motion-reduce:py-16 md:motion-reduce:px-14">
+        <p className="ui-label text-sage">Field observations · above and below ground</p>
+        <ol className="mt-6 grid gap-6 md:grid-cols-3">
+          {DISCOVERY.map((d) => (
+            <li key={d.id} className="border-t border-bone/20 pt-4">
+              <p className="ui-label text-[10px] text-sage">{d.kicker}</p>
+              <p className="mt-2 text-sm font-semibold uppercase tracking-[0.16em] text-bone">{d.title}</p>
+              <p className="mt-1 text-bone/75">{d.desc}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
       <RestorationSignal />
       <ChapterIndicator />
     </section>

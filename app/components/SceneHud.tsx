@@ -15,7 +15,11 @@ const ECHO = "M 6 48 C 24 48 40 37 58 37 S 92 45 110 45 S 144 28 162 28 S 198 33
 export function RestorationSignal() {
   return (
     <div className="hud-signal pointer-events-none absolute bottom-8 left-14 z-20 hidden select-none md:block motion-reduce:hidden!">
-      <p className="ui-label text-bone/90">RESTORATION</p>
+      <p className="sig-note mb-3 max-w-[230px] text-[12px] leading-snug text-bone opacity-0 [text-shadow:0_1px_3px_rgb(0_0_0/0.9),0_0_14px_rgb(0_0_0/0.7)]">
+        <span className="ui-label block text-[10px] text-sage">07 / Restoration</span>
+        Connected processes support ecosystem recovery.
+      </p>
+      <p className="ui-label text-bone">RESTORATION</p>
       <svg viewBox="0 0 220 56" className="mt-2 h-14 w-[220px] overflow-visible" aria-hidden>
         {/* the potential: faint dashed course of the full line */}
         <path d={LINE} fill="none" stroke="var(--color-bone)" strokeOpacity={0.28} strokeWidth={1} strokeDasharray="2 4" />
@@ -29,7 +33,7 @@ export function RestorationSignal() {
           </g>
         ))}
       </svg>
-      <p className="ui-label mt-1 text-[10px] text-sage">ECOLOGICAL RECOVERY</p>
+      <p className="ui-label mt-1 text-[11px] text-[#dfe6d4]">LONG-TERM ECOSYSTEM RECOVERY</p>
     </div>
   );
 }
@@ -37,15 +41,15 @@ export function RestorationSignal() {
 export function ChapterIndicator() {
   return (
     <div className="hud-chapter pointer-events-none absolute bottom-6 right-5 z-20 select-none text-right md:bottom-8 md:right-14 motion-reduce:hidden">
-      <p className="ui-label hidden text-bone/75 md:block">FIELD SEQUENCE</p>
-      <p className="ui-label mt-1 text-bone tabular-nums">
+      <p className="ui-label hidden text-bone/90 md:block">FIELD SEQUENCE</p>
+      <p className="ui-label mt-1 text-[13px] text-bone tabular-nums">
         <span className="hud-chapter-num">01</span>
-        <span className="text-bone/50"> / 04</span>
-        <span className="ml-3 hidden text-sage md:inline">2040</span>
+        <span className="text-bone/70"> / 04</span>
+        <span className="ml-3 hidden text-[#dfe6d4] md:inline">2040</span>
       </p>
       <div className="mt-3 ml-auto flex w-[120px] gap-1.5 md:w-[168px]">
         {[0, 1, 2, 3].map((i) => (
-          <span key={i} className="hud-seg relative h-[2px] flex-1 overflow-hidden bg-bone/25">
+          <span key={i} className="hud-seg relative h-[2px] flex-1 overflow-hidden bg-bone/35">
             <span className="hud-seg-fill absolute inset-0 origin-left scale-x-0 bg-sage" />
           </span>
         ))}
