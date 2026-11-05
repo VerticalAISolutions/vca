@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 const PRIMAER = "#2f6b4f";
-// TODO: nach dem ersten Deploy die echte Domain eintragen
-const DOMAIN = "https://DEINE-DOMAIN";
+const DOMAIN = "https://vca-two.vercel.app";
 
 const daten = {
   name: "Mockname",
