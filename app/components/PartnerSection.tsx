@@ -100,11 +100,11 @@ export default function PartnerSection() {
       </div>
 
       <footer className="mx-auto mt-28 flex max-w-6xl flex-col gap-6 border-t border-bone/15 pt-8 md:mt-36 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <Logo className="h-7 w-7 text-sage" />
-          <span className="text-[12px] font-semibold tracking-[0.32em]">THE GARDENERS</span>
+          <span className="whitespace-nowrap text-[12px] font-semibold tracking-[0.32em]">THE GARDENERS</span>
         </div>
-        <p className="ui-label text-[10px] text-bone/50">Restoration / Research / Responsibility</p>
+        <p className="ui-label whitespace-nowrap text-[10px] text-bone/50">Restoration / Research / Responsibility</p>
         <p className="ui-label text-[10px] text-bone/40">
           Est. 2040 · A fictional brand by{" "}
           <a

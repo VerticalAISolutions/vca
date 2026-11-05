@@ -1,53 +1,45 @@
-import { useId } from "react";
+// THE GARDENERS symbol: two leaf lobes above the ground line, a root network below.
+// Same geometry as /public/brand/the-gardeners-mark.svg, with slightly heavier
+// roots and ground line so the mark holds up at icon sizes (28–56 px).
 
-// THE GARDENERS symbol, traced from the brand board. Cutouts are real (mask),
-// so the mark works on any background. Static files live in /public/brand.
-const VB = "40 30 1010 975";
-const LOBES = [
-  "M 478 46 C 300 70 70 300 52 560 C 40 760 160 905 300 905 C 390 905 455 860 485 790 L 520 700 L 528 525 C 470 460 440 400 452 320 C 462 240 505 160 505 80 C 505 58 495 46 478 46 Z",
-  "M 612 46 C 790 70 1020 300 1038 560 C 1050 760 930 905 790 905 C 700 905 635 860 605 790 L 570 700 L 562 525 C 620 460 650 400 638 320 C 628 240 585 160 585 80 C 585 58 595 46 612 46 Z",
+const CX = 577.5;
+const m = (x: number) => 2 * CX - x;
+
+const LOBE =
+  "M 541 123 C 548 123 552 128 552 138 L 552 318 C 552 360 522 389 482 389 C 440 389 411 358 411 315 C 411 245 455 172 520 130 C 527 125 534 123 541 123 Z";
+const LOBE_R = `M ${m(541)} 123 C ${m(548)} 123 ${m(552)} 128 ${m(552)} 138 L ${m(552)} 318 C ${m(552)} 360 ${m(522)} 389 ${m(482)} 389 C ${m(440)} 389 ${m(411)} 358 ${m(411)} 315 C ${m(411)} 245 ${m(455)} 172 ${m(520)} 130 C ${m(527)} 125 ${m(534)} 123 ${m(541)} 123 Z`;
+
+const ROOTS = [
+  "M 577.5 440 L 577.5 615",
+  "M 577.5 440 C 575 500 545 525 505 548 C 482 561 465 576 458 586",
+  `M 577.5 440 C ${m(575)} 500 ${m(545)} 525 ${m(505)} 548 C ${m(482)} 561 ${m(465)} 576 ${m(458)} 586`,
+  "M 505 436 C 495 470 460 485 420 497 L 392 507",
+  `M ${m(505)} 436 C ${m(495)} 470 ${m(460)} 485 ${m(420)} 497 L ${m(392)} 507`,
 ];
-const SLITS = [
-  "M 340 84 C 205 190 125 400 216 580 C 175 410 230 215 340 84 Z",
-  "M 750 84 C 885 190 965 400 874 580 C 915 410 860 215 750 84 Z",
-];
-const BRANCHES = [
-  "M 337 368 C 340 470 420 520 478 568 C 515 600 530 640 545 705 C 560 640 575 600 612 568 C 670 520 750 470 753 368",
-  "M 250 638 C 390 630 492 680 500 790 L 503 835",
-  "M 840 638 C 700 630 598 680 590 790 L 587 835",
-];
-const NODES = [
-  [337, 368],
-  [753, 368],
-  [250, 638],
-  [840, 638],
+const NODES: [number, number][] = [
+  [446, 600],
+  [372.5, 514],
+  [m(446), 600],
+  [m(372.5), 514],
+  [CX, 635],
 ];
 
 export default function Logo({ className, title }: { className?: string; title?: string }) {
-  const id = useId().replace(/:/g, "");
   return (
-    <svg viewBox={VB} className={className} role={title ? "img" : undefined} aria-hidden={title ? undefined : true}>
+    <svg viewBox="265 103 625 572" className={className} role={title ? "img" : undefined} aria-hidden={title ? undefined : true}>
       {title ? <title>{title}</title> : null}
-      <mask id={`m${id}`} maskUnits="userSpaceOnUse" x="0" y="0" width="1100" height="1050">
-        <rect x="0" y="0" width="1100" height="1050" fill="#fff" />
-        {SLITS.map((d) => (
-          <path key={d} d={d} fill="#000" />
-        ))}
-        {BRANCHES.map((d) => (
-          <path key={d} d={d} fill="none" stroke="#000" strokeWidth={30} strokeLinecap="round" strokeLinejoin="miter" strokeMiterlimit={2.6} />
-        ))}
-        {NODES.map(([x, y]) => (
-          <circle key={`${x}-${y}`} cx={x} cy={y} r={37} fill="#000" />
-        ))}
-      </mask>
-      <g fill="currentColor" mask={`url(#m${id})`}>
-        {LOBES.map((d) => (
+      <g fill="currentColor">
+        <path d={LOBE} />
+        <path d={LOBE_R} />
+        <rect x="282" y="414" width="591" height="26" rx="13" />
+      </g>
+      <g fill="none" stroke="currentColor" strokeWidth={15} strokeLinecap="round" strokeLinejoin="round">
+        {ROOTS.map((d) => (
           <path key={d} d={d} />
         ))}
-        <rect x="531" y="320" width="28" height="240" />
-        <rect x="521" y="540" width="48" height="420" />
-        <circle cx="545" cy="315" r="37" />
-        <rect x="190" y="948" width="718" height="47" />
+        {NODES.map(([x, y]) => (
+          <circle key={`${x}-${y}`} cx={x} cy={y} r={18} />
+        ))}
       </g>
     </svg>
   );
