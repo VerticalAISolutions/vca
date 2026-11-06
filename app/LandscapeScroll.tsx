@@ -18,13 +18,14 @@ const SET = "/landscape/fixpoint";
 // Bilddateien bleiben unverändert. false = Originalfarben.
 const FUTURE_LAB = false;
 
-type Scene = { src: string; alt: string; kicker: string; headline: string; body: string; reveal?: boolean };
+type Scene = { src: string; alt: string; kicker: string; headline: string; body: string; reveal?: boolean; center?: boolean };
 
 const STATES: Scene[] = [
   {
     src: `${SET}/state-1.webp`,
     alt: "Fester Beobachtungspunkt in kalter, bedeckter Dämmerung: totes Gras, im Querschnitt karger, verdichteter Boden",
     kicker: "01|The Silence",
+    center: true,
     headline: "Nature has lost its gardeners.",
     body: "We bring back extinct animals that once shaped entire ecosystems.",
   },
@@ -32,6 +33,7 @@ const STATES: Scene[] = [
     src: `${SET}/state-2.webp`,
     alt: "Dieselbe Stelle bei Sonnenaufgang: frische Hufspuren im trockenen Gras, darunter ein Regenwurm auf dem Weg nach oben",
     kicker: "02|The Traces",
+    center: true,
     headline: "But the land remembers.",
     body: "Once, great wild grazers shaped these landscapes. Their disappearance left more than empty space.",
   },
@@ -292,7 +294,11 @@ export default function LandscapeScroll() {
           />
           </div>
           {/* reading light: a soft veil from the text side (desktop) / from the top (mobile), no text shadows */}
-          <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(14_24_19/0.66)_0%,rgb(14_24_19/0.42)_26%,rgb(14_24_19/0.12)_46%,transparent_60%)] md:block" />
+          {s.center ? (
+            <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_62%_48%_at_50%_24%,rgb(14_24_19/0.55)_0%,rgb(14_24_19/0.28)_55%,transparent_100%)] md:block" />
+          ) : (
+            <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(14_24_19/0.66)_0%,rgb(14_24_19/0.42)_26%,rgb(14_24_19/0.12)_46%,transparent_60%)] md:block" />
+          )}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-[48svh] bg-gradient-to-b from-[rgb(14_24_19/0.62)] via-[rgb(14_24_19/0.3)] to-transparent md:hidden" />
           {/* soft top edge for the navigation */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(20_32_26/0.5)] to-transparent" />
@@ -301,7 +307,7 @@ export default function LandscapeScroll() {
           {/* soft floor so the bottom interface stays readable */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
-            className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.center ? "ls-center md:right-14" : ""} ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
             <Label index={s.kicker.split("|")[0]} className="ls-kicker text-bone">{s.kicker.split("|")[1]}</Label>
             {s.reveal ? (

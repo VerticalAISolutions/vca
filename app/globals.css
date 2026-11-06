@@ -80,6 +80,20 @@ body {
   text-wrap: pretty;
 }
 
+/* centred title cards (scenes without animals) */
+.ls-center {
+  text-align: center;
+  align-items: center;
+}
+.ls-center .ls-kicker {
+  justify-content: center;
+}
+.ls-center .t-h1,
+.ls-center .ls-body {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* lab labels: monospaced, uppercase, measured tracking */
 .ui-label {
   font-family: var(--font-mono);
