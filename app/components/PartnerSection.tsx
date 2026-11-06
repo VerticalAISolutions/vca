@@ -74,7 +74,7 @@ export default function PartnerSection() {
                       </svg>
                     </span>
                   </span>
-                  <span className="mt-14 block md:mt-auto">
+                  <span className="mt-7 block md:mt-auto">
                     <span className="t-h2 block">{w.title}</span>
                     <span className="t-body mt-3 block max-w-[26ch] text-bone/72">{w.copy}</span>
                   </span>
@@ -87,7 +87,7 @@ export default function PartnerSection() {
         <div className="mt-12 flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
           <a
             href={href}
-            className="group relative inline-flex items-center gap-5 bg-bone px-7 py-5 font-mono text-[13px] uppercase tracking-[0.06em] whitespace-nowrap text-forest transition-colors duration-300 hover:bg-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
+            className="group relative flex w-full items-center justify-between gap-5 bg-bone px-7 py-5 md:inline-flex md:w-auto md:justify-start font-mono text-[13px] uppercase tracking-[0.06em] whitespace-nowrap text-forest transition-colors duration-300 hover:bg-signal focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-signal"
           >
             <Corners tone="bg-bone" all />
             {cta}
@@ -100,7 +100,7 @@ export default function PartnerSection() {
             <span aria-hidden>·</span>
             <span>{picked.length ? interest : "No selection yet"}</span>
             <span aria-hidden>·</span>
-            <button type="button" onClick={copy} className="uppercase text-bone/75 underline decoration-bone/30 underline-offset-4 transition-colors hover:text-signal">
+            <button type="button" onClick={copy} className="-my-3 inline-block py-3 uppercase text-bone/75 underline decoration-bone/30 underline-offset-4 transition-colors hover:text-signal">
               {copied ? "Copied" : "Copy message"}
             </button>
           </p>
@@ -119,7 +119,7 @@ export default function PartnerSection() {
             href="https://steadymade.ai"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-bone/70 underline-offset-4 transition-colors hover:text-sage hover:underline"
+            className="-my-3 inline-block py-3 text-bone/70 underline-offset-4 transition-colors hover:text-sage hover:underline"
           >
             steadymade.ai
           </a>{" "}

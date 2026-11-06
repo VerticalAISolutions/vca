@@ -41,13 +41,13 @@ body {
   font-kerning: normal;
 }
 .t-display {
-  font-size: clamp(4rem, 11.1vw, 10rem);
+  font-size: clamp(4.4rem, 11.1vw, 10rem);
   line-height: 0.92;
   letter-spacing: -0.02em;
   margin-left: -0.045em; /* optical alignment with the label above */
 }
 .t-h1 {
-  font-size: clamp(2.75rem, 6.1vw, 5.5rem);
+  font-size: clamp(3.05rem, 6.1vw, 5.5rem);
   line-height: 1.02;
   letter-spacing: -0.01em;
   margin-left: -0.035em;

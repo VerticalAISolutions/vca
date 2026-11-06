@@ -35,16 +35,23 @@ export default function MissionSection() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const q = gsap.utils.selector(root);
-        // root line connects the phases with the scroll
+      const q = gsap.utils.selector(root);
+      // desktop: the root line connects the phases with the scroll
+      mm.add("(prefers-reduced-motion: no-preference) and (min-width: 768px)", () => {
         gsap
           .timeline({ scrollTrigger: { trigger: q(".ap-graph")[0], start: "top 85%", end: "top 35%", scrub: 0.6 } })
           .fromTo(q(".ap-line"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: "none" }, 0)
           .fromTo(q(".ap-root"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.25, ease: "none" }, 0.1)
           .fromTo(q(".ap-node"), { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.15, stagger: 0.38, ease: "back.out(3)" }, 0)
           .fromTo(q(".ap-step"), { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.36 }, 0.05);
-
+      });
+      // mobile: stacked phases, each one rises as it enters
+      mm.add("(prefers-reduced-motion: no-preference) and (max-width: 767px)", () => {
+        q(".ap-step").forEach((el) =>
+          gsap.fromTo(el, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", scrollTrigger: { trigger: el, start: "top 88%", once: true } })
+        );
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
         // live figures count up once
         q(".ap-num").forEach((el, i) => {
           const o = { n: 0 };
@@ -128,7 +135,9 @@ export default function MissionSection() {
               <span aria-hidden className="fn-live relative h-1.5 w-1.5 rounded-full bg-signal" />
               Live · Field network
             </span>
-            <span className="text-right">Updated 2040.06.14 · 07:45 UTC</span>
+            <span className="text-right">
+              <span className="hidden md:inline">Updated </span>2040.06.14<span className="hidden md:inline"> · 07:45 UTC</span>
+            </span>
           </div>
           <dl className="grid grid-cols-2 md:grid-cols-4">
             {LIVE.map((l, i) => (
