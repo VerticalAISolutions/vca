@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Corners from "./Corners";
+import Label from "./Label";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -63,18 +64,16 @@ export default function MissionSection() {
   );
 
   return (
-    <section ref={root} id="approach" className="relative bg-forest px-5 pt-28 text-bone md:px-14 md:pt-40">
+    <section ref={root} id="approach" className="relative bg-[linear-gradient(180deg,var(--color-night)_0%,#111a17_16%,#1a2c24_32%,var(--color-forest)_52%)] px-5 pt-28 text-bone md:px-14 md:pt-40">
       <div className="mx-auto max-w-6xl">
-        <p className="ui-label flex items-center gap-4 text-sage">
-          <span className="text-signal">●</span> The Gardeners <span aria-hidden className="h-px w-10 bg-sage/50" /> Our approach
-        </p>
+        <Label className="text-sage">Our approach</Label>
 
-        <div className="mt-8 grid gap-10 md:grid-cols-[1.5fr_1fr] md:items-end md:gap-16">
-          <h2 className="font-serif text-[clamp(2.4rem,4.8vw,4.5rem)] leading-[1] tracking-[-0.01em]">
-            Their return sets natural processes in motion.{" "}
-            <span className="italic text-sage">Our commitment makes long-term restoration possible.</span>
-          </h2>
-          <p className="max-w-md border-l border-bone/20 pl-6 text-lg leading-relaxed text-bone/80">
+        <div className="mt-5 grid gap-10 md:grid-cols-[1.45fr_1fr] md:items-end md:gap-20">
+          <div>
+            <h2 className="t-h2 max-w-[18ch]">Their return sets natural processes in motion.</h2>
+            <p className="t-lead-serif mt-5 max-w-[26ch] text-sage">Our commitment makes long-⁠term restoration possible.</p>
+          </div>
+          <p className="t-body max-w-[38ch] border-l border-bone/20 pl-6 text-bone/72">
             Aurochs are one example. Our mission extends to extinct species whose return can help restore lost ecological functions.
           </p>
         </div>
@@ -112,9 +111,9 @@ export default function MissionSection() {
               <li key={s.title} className="ap-step relative py-8 pl-7 md:py-0 md:pl-0 md:pr-10">
                 {/* mobile node on the vertical line */}
                 <span aria-hidden className="absolute -left-[5px] top-10 h-[9px] w-[9px] rounded-full border border-signal bg-forest md:hidden" />
-                <p className="ui-label text-[10px] text-bone/50">Phase 0{i + 1}</p>
-                <p className="font-serif mt-4 text-[2.6rem] leading-none md:text-5xl">{s.title}</p>
-                <p className="mt-4 max-w-[28ch] leading-relaxed text-bone/70">{s.copy}</p>
+                <p className="ui-label text-bone/50">Phase 0{i + 1}</p>
+                <p className="t-h2 mt-4">{s.title}</p>
+                <p className="t-body mt-4 max-w-[30ch] text-bone/72">{s.copy}</p>
                 <p className="ui-label mt-5 text-[10px] text-sage">→ {s.data}</p>
               </li>
             ))}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Corners from "./Corners";
+import Label from "./Label";
 import Logo from "./Logo";
 
 // Restoration partner enquiries
@@ -36,13 +37,11 @@ export default function PartnerSection() {
   return (
     <section id="partner" className="relative bg-forest px-5 pb-24 pt-28 text-bone md:px-14 md:pb-32 md:pt-40">
       <div className="mx-auto max-w-6xl">
-        <p className="ui-label flex items-center gap-4 text-sage">
-          <span className="text-signal">●</span> The next chapter <span aria-hidden className="h-px w-10 bg-sage/50" /> Your role
-        </p>
-        <div className="mt-8 grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-end md:gap-16">
-          <h2 className="font-serif text-[clamp(3rem,7.6vw,7rem)] leading-[0.92] tracking-[-0.01em]">Help bring the gardeners back.</h2>
-          <p className="max-w-md text-lg leading-relaxed text-bone/80 md:pb-3">
-            Restoring ecosystems takes land, scientific knowledge, long-term commitment and funding. Every partner makes a difference.
+        <Label className="text-sage">Your role</Label>
+        <div className="mt-5 grid gap-8 md:grid-cols-[1.4fr_1fr] md:items-end md:gap-20">
+          <h2 className="t-h1 max-w-[12ch]">Help bring the gardeners back.</h2>
+          <p className="t-lead max-w-[34ch] text-bone/72 md:pb-2">
+            Restoring ecosystems takes land, scientific knowledge, long-⁠term commitment and funding. Every partner makes a difference.
           </p>
         </div>
 
@@ -65,7 +64,7 @@ export default function PartnerSection() {
                 >
                   <Corners tone={on ? "bg-signal" : "bg-bone/60"} />
                   <span className="flex items-center justify-between">
-                    <span className="ui-label text-[10px] text-bone/50">0{i + 1} / Contribution</span>
+                    <span className="ui-label text-bone/50">0{i + 1}</span>
                     <span
                       aria-hidden
                       className={`flex h-5 w-5 items-center justify-center border transition-colors duration-300 ${on ? "border-signal bg-signal text-forest" : "border-bone/35 text-transparent group-hover:border-bone/70"}`}
@@ -76,8 +75,8 @@ export default function PartnerSection() {
                     </span>
                   </span>
                   <span className="mt-14 block md:mt-auto">
-                    <span className="font-serif block text-[2.6rem] leading-none md:text-5xl">{w.title}</span>
-                    <span className="mt-3 block max-w-[26ch] leading-relaxed text-bone/70">{w.copy}</span>
+                    <span className="t-h2 block">{w.title}</span>
+                    <span className="t-body mt-3 block max-w-[26ch] text-bone/72">{w.copy}</span>
                   </span>
                 </button>
               );

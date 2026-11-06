@@ -7,6 +7,8 @@
   --color-sage: #a0b38b;
   --color-earth: #b07c55;
   --color-forest-deep: #172821;
+  /* bottom edge of scene 05 (blue hour), measured from the image: the seam colour */
+  --color-night: #090a0f;
   /* bioluminescent signal, taken from the glowing root network: live data only */
   --color-signal: #cdee8f;
 
@@ -25,12 +27,65 @@ body {
   font-family: var(--font-sans);
 }
 
-/* lab labels: monospaced, uppercase, light tracking */
+/* ---------------------------------------------------------------------------
+   TYPE SYSTEM · one scale for the whole site (desktop 1440 → mobile 390)
+   display 160/64 · h1 88/44 · h2 56/34 · lead 22/18 · body 17/16 · label 11.5
+   Headlines balance their lines, running text avoids single-word last lines.
+--------------------------------------------------------------------------- */
+.t-display,
+.t-h1,
+.t-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  text-wrap: balance;
+  font-kerning: normal;
+}
+.t-display {
+  font-size: clamp(4rem, 11.1vw, 10rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin-left: -0.045em; /* optical alignment with the label above */
+}
+.t-h1 {
+  font-size: clamp(2.75rem, 6.1vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  margin-left: -0.035em;
+}
+.t-h2 {
+  font-size: clamp(2.125rem, 3.9vw, 3.5rem);
+  line-height: 1.06;
+  letter-spacing: 0;
+}
+.t-lead {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1.125rem, 1.53vw, 1.375rem);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+.t-lead-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.35vw, 2.125rem);
+  line-height: 1.18;
+  text-wrap: balance;
+}
+.t-body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.18vw, 1.0625rem);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* lab labels: monospaced, uppercase, measured tracking */
 .ui-label {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1.4;
   font-variant-numeric: tabular-nums;

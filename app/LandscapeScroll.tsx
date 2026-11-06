@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import Label from "./components/Label";
 import ResearchMarkers from "./components/ResearchMarkers";
 import { ChapterIndicator, RestorationSignal } from "./components/SceneHud";
 
@@ -23,21 +24,21 @@ const STATES: Scene[] = [
   {
     src: `${SET}/state-1.webp`,
     alt: "Fester Beobachtungspunkt in kalter, bedeckter Dämmerung: totes Gras, im Querschnitt karger, verdichteter Boden",
-    kicker: "01 — The Silence",
+    kicker: "01|The Silence",
     headline: "Nature has lost its gardeners.",
     body: "We bring back extinct animals that once shaped entire ecosystems.",
   },
   {
     src: `${SET}/state-2.webp`,
     alt: "Dieselbe Stelle bei Sonnenaufgang: frische Hufspuren im trockenen Gras, darunter ein Regenwurm auf dem Weg nach oben",
-    kicker: "02 — The Traces",
+    kicker: "02|The Traces",
     headline: "But the land remembers.",
     body: "Once, great wild grazers shaped these landscapes. Their disappearance left more than empty space.",
   },
   {
     src: `${SET}/state-3.webp`,
     alt: "Ein Auerochsenbulle im Gegenlicht der aufgehenden Sonne, die Herde im Bodennebel, darunter noch ausgelaugter Boden",
-    kicker: "03 — The Return",
+    kicker: "03|The Return",
     headline: "Meet the gardeners.",
     body: "These are aurochs. Extinct wild cattle that once helped shape European landscapes. We are bringing them back.",
     reveal: true,
@@ -45,14 +46,14 @@ const STATES: Scene[] = [
   {
     src: `${SET}/state-4.webp`,
     alt: "Derselbe Moment Jahre später: blühende Wiese, unter dem Hufabdruck keimt ein Samen, Pilzgeflecht, Mistkäfer und Regenwurm im lebendigen Boden",
-    kicker: "04 — The Revival",
+    kicker: "04|The Revival",
     headline: "Their return is just the beginning.",
-    body: "Their grazing and movement help restart natural processes. Protected habitats, research and long-term stewardship give ecosystems the conditions to recover.",
+    body: "Their grazing and movement help restart natural processes. Protected habitats, research and long-\u2060term stewardship give ecosystems the conditions to recover.",
   },
   {
     src: `${SET}/state-5.webp`,
     alt: "Blaue Stunde: der Auerochse als Silhouette, im Boden leuchtet das Pilzgeflecht biolumineszent, Glühwürmchen im Gras",
-    kicker: "The Gardeners · Our mission",
+    kicker: "●|Our mission",
     headline: "Bring back what brings life.",
     body: "We bring back extinct species, restore protected habitats and work with scientists and conservation partners to rebuild living ecosystems.",
   },
@@ -290,30 +291,33 @@ export default function LandscapeScroll() {
             style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
           />
           </div>
-          {/* scrim only behind headline and supporting copy */}
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(20_32_26/0.68)_0%,rgb(20_32_26/0.3)_42%,transparent_70%)]" />
+          {/* reading light: a soft veil from the text side (desktop) / from the top (mobile), no text shadows */}
+          <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(14_24_19/0.66)_0%,rgb(14_24_19/0.42)_26%,rgb(14_24_19/0.12)_46%,transparent_60%)] md:block" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[48svh] bg-gradient-to-b from-[rgb(14_24_19/0.62)] via-[rgb(14_24_19/0.3)] to-transparent md:hidden" />
           {/* soft top edge for the navigation */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(20_32_26/0.5)] to-transparent" />
+          {/* last scene: the image bottom settles into the night colour the next section starts with */}
+          {i === STATES.length - 1 ? <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent" /> : null}
           {/* soft floor so the bottom interface stays readable */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
             className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
-            <p className="ls-kicker ui-label text-[12px] text-bone">{s.kicker}</p>
+            <Label index={s.kicker.split("|")[0]} className="ls-kicker text-bone">{s.kicker.split("|")[1]}</Label>
             {s.reveal ? (
               // Level 1+: the brand reveal deliberately breaks the shared headline scale (~30% larger)
-              <h2 className="font-serif mt-3 text-[clamp(3.9rem,11vw,9.6rem)] leading-[0.86] tracking-[-0.02em] text-bone [text-shadow:0_2px_36px_rgb(0_0_0/0.4)]">
+              <h2 className="t-display mt-5 text-bone [filter:drop-shadow(0_1px_18px_rgb(0_0_0/0.22))]">
                 <Words text="Meet the" />
                 <br />
                 <Words text="gardeners." />
               </h2>
             ) : (
-              <h2 className="font-serif mt-4 max-w-[15ch] text-[clamp(2.6rem,7.2vw,6rem)] leading-[0.98] tracking-[-0.01em] text-bone [text-shadow:0_2px_28px_rgb(0_0_0/0.35)]">
+              <h2 className="t-h1 mt-5 max-w-[14ch] text-bone [filter:drop-shadow(0_1px_14px_rgb(0_0_0/0.2))]">
                 <Words text={s.headline} />
               </h2>
             )}
             <p
-              className={`ls-body mt-auto max-w-[34ch] text-[clamp(1rem,1.25vw,1.2rem)] leading-[1.55] text-bone [text-shadow:0_1px_14px_rgb(0_0_0/0.55)] md:mt-7 motion-reduce:mt-6 ${s.reveal ? "md:max-w-[38ch]" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+              className={`ls-body t-lead mt-auto max-w-[32ch] text-bone [text-shadow:0_1px_2px_rgb(0_0_0/0.3)] md:mt-7 motion-reduce:mt-6 ${s.reveal ? "md:max-w-[36ch]" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
             >
               {s.body}
             </p>

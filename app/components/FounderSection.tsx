@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
 import Corners from "./Corners";
+import Label from "./Label";
 import Logo from "./Logo";
 
 const PHOTO = ["founder.webp", "founder.jpg"].find((f) => fs.existsSync(path.join(process.cwd(), "public", f)));
@@ -20,9 +21,7 @@ export default function FounderSection() {
   return (
     <section id="founder" className="relative bg-bone px-5 py-24 text-forest md:px-14 md:py-36">
       <div className="mx-auto max-w-6xl">
-        <p className="ui-label flex items-center gap-4 text-forest/60">
-          <span className="text-earth">●</span> The founder <span aria-hidden className="h-px w-10 bg-forest/30" /> Why we exist
-        </p>
+        <Label accent="text-earth" className="text-forest/60">The founder</Label>
 
         <div className="mt-10 grid gap-12 md:mt-14 md:grid-cols-[0.85fr_1.15fr] md:gap-16 lg:gap-20">
           {/* portrait as a field record */}
@@ -70,9 +69,10 @@ export default function FounderSection() {
           </figure>
 
           <div>
-            <blockquote className="font-serif text-[clamp(2.3rem,4.4vw,4.2rem)] leading-[1.02] tracking-[-0.01em]">
-              <span aria-hidden className="mr-1 text-earth">“</span>I spent half my life making machines better.{" "}
-              <span className="italic text-[#4f6b47]">Now it’s the earth’s turn.</span>
+            <blockquote className="t-h2 relative">
+              {/* hanging punctuation: the quote mark sits outside the text edge */}
+              <span aria-hidden className="absolute -ml-[0.42em] text-earth">“</span>I spent half my life making machines better.{" "}
+              <span className="inline-block italic text-[#4f6b47]">Now it’s the earth’s turn.</span>
               <span aria-hidden className="text-earth">”</span>
             </blockquote>
             <div className="mt-8 flex items-center gap-4">
@@ -85,7 +85,7 @@ export default function FounderSection() {
               </span>
             </div>
 
-            <div className="mt-10 space-y-5 text-lg leading-relaxed text-forest/80">
+            <div className="t-body mt-10 max-w-[60ch] space-y-5 text-forest/72">
               <p>
                 By 2040, machines run on a fraction of the energy they once consumed. They handle the routine, and people have gained time. Ilka uses
                 hers to repair what the machine age broke: rivers that ran dry, habitats that fell apart, and the animals that kept them alive.
