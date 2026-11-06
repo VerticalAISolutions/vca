@@ -307,7 +307,7 @@ export default function LandscapeScroll() {
           {/* soft floor so the bottom interface stays readable */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
-            className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.center ? "ls-center md:right-14" : ""} ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[calc(12svh+1.75rem)] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.center ? "ls-center md:right-14" : ""} ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
             <Label index={s.kicker.split("|")[0]} className="ls-kicker text-bone">{s.kicker.split("|")[1]}</Label>
             {s.reveal ? (
