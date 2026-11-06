@@ -12,10 +12,15 @@ export default function SiteNav() {
   // slides under a transparent bar.
   const [solid, setSolid] = useState(false);
   useEffect(() => {
+    // Measured live on every scroll update (incl. the smoother's inertia), so it cannot go
+    // stale when the pinned scene changes the page height after a precomputed trigger.
     let st: ScrollTrigger | undefined;
     const id = requestAnimationFrame(() => {
-      st = ScrollTrigger.create({ trigger: "#approach", start: "top 60%", end: "max", onToggle: (self) => setSolid(self.isActive) });
-      setSolid(st.isActive);
+      const target = document.getElementById("approach");
+      if (!target) return;
+      const check = () => setSolid(target.getBoundingClientRect().top < window.innerHeight * 0.6);
+      st = ScrollTrigger.create({ start: 0, end: "max", onUpdate: check, onRefresh: check });
+      check();
     });
     return () => {
       cancelAnimationFrame(id);
