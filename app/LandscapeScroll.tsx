@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -80,6 +80,18 @@ const CHAPTERS = CHAPTER_EDGES.length - 1;
 const TOTAL = 12.2;
 const REVEAL = STATES.findIndex((s) => s.reveal);
 
+// headline words rise out of a mask (descender-safe padding)
+function Words({ text }: { text: string }) {
+  return text.split(" ").map((w, i, a) => (
+    <Fragment key={`${w}-${i}`}>
+      <span className="inline-block overflow-hidden pb-[0.14em] -mb-[0.14em] align-top">
+        <span className="ls-w inline-block will-change-transform">{w}</span>
+      </span>
+      {i < a.length - 1 ? " " : null}
+    </Fragment>
+  ));
+}
+
 export default function LandscapeScroll() {
   const root = useRef<HTMLElement>(null);
 
@@ -118,18 +130,28 @@ export default function LandscapeScroll() {
           },
         });
 
-        // --- images + headlines ---
+        // --- camera: one slow push through the whole sequence (images and marker layer move together) ---
+        tl.fromTo(q(".ls-cam"), { scale: 1, yPercent: 0 }, { scale: 1.05, yPercent: -0.8, transformOrigin: "50% 55%", duration: TOTAL }, 0);
+
+        // --- scene changes: the next landscape rises from the ground, a scan line leads the edge ---
         const bodies = q(".ls-body");
+        const scan = q(".ls-scan")[0];
+        const scanLabel = q(".ls-scan-label")[0] as HTMLElement | undefined;
+        const words = (i: number) => q(`.ls-head-${i} .ls-w`);
         FADES.forEach((at, k) => {
           const i = k + 1;
-          tl.fromTo(layers[i], { opacity: 0 }, { opacity: 1, duration: 1 }, at).to(heads[i - 1], { opacity: 0, y: -16, duration: 0.45 }, at);
+          tl.fromTo(layers[i], { "--wipe": "0%" }, { "--wipe": "112%", duration: 1, ease: "power1.inOut" }, at)
+            .fromTo(scan, { top: "100%", autoAlpha: 1 }, { top: "-6%", duration: 1, ease: "power1.inOut", immediateRender: false }, at)
+            .set(scan, { autoAlpha: 0 }, at + 1)
+            .call(() => {
+              if (scanLabel) scanLabel.textContent = `Scanning · layer 0${i + 1}`;
+            }, [], at)
+            .to(heads[i - 1], { opacity: 0, y: -16, duration: 0.45 }, at);
           if (i === REVEAL) return; // staged separately below
-          tl.fromTo(heads[i], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.45 }, at + 0.55).fromTo(
-            bodies[i],
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.4 },
-            at + 0.75
-          );
+          tl.fromTo(heads[i], { opacity: 0, y: 0 }, { opacity: 1, duration: 0.05 }, at + 0.5)
+            .fromTo(q(`.ls-head-${i} .ls-kicker`), { opacity: 0 }, { opacity: 1, duration: 0.3 }, at + 0.5)
+            .fromTo(words(i), { yPercent: 115 }, { yPercent: 0, duration: 0.45, stagger: 0.05, ease: "power3.out" }, at + 0.55)
+            .fromTo(bodies[i], { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4 }, at + 0.85);
         });
 
         // --- SCENE 03 · the brand reveal ---
@@ -138,12 +160,7 @@ export default function LandscapeScroll() {
         const r = FADES[REVEAL - 1] + 1; // herd fully in
         tl.fromTo(heads[REVEAL], { opacity: 0, y: 0 }, { opacity: 1, duration: 0.05 }, r - 0.1)
           .fromTo(q(".ls-reveal .ls-kicker"), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 }, r - 0.1)
-          .fromTo(
-            q(".ls-reveal h2"),
-            { opacity: 0, y: 44, scale: 0.94, filter: "blur(12px)", transformOrigin: "0% 100%" },
-            { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power3.out" },
-            r
-          )
+          .fromTo(words(REVEAL), { yPercent: 115 }, { yPercent: 0, duration: 0.7, stagger: 0.12, ease: "power4.out" }, r)
           .fromTo(bodies[REVEAL], { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4 }, r + 0.8);
 
         // --- marker helpers ---
@@ -219,6 +236,12 @@ export default function LandscapeScroll() {
 
         tl.to({}, { duration: 0.01 }, TOTAL - 0.01); // final clean hold
         updateChapter(0);
+
+        // --- intro: the first headline rises on load ---
+        if (window.scrollY < 10) {
+          gsap.from(words(0), { yPercent: 115, duration: 1.1, stagger: 0.07, ease: "power4.out", delay: 0.15 });
+          gsap.from(q(".ls-head-0 .ls-kicker, .ls-head-0 .ls-body"), { opacity: 0, y: 12, duration: 0.9, stagger: 0.5, ease: "power2.out", delay: 0.3 });
+        }
       });
     },
     { scope: root }
@@ -248,8 +271,9 @@ export default function LandscapeScroll() {
       {STATES.map((s, i) => (
         <div
           key={s.src}
-          className={`ls-layer absolute inset-0 motion-reduce:relative motion-reduce:h-svh ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+          className={`ls-layer absolute inset-0 overflow-hidden motion-reduce:relative motion-reduce:h-svh ${i > 0 ? "ls-wipe" : ""}`}
         >
+          <div className="ls-cam absolute inset-0 will-change-transform">
           <Image
             src={s.src}
             alt={s.alt}
@@ -259,6 +283,7 @@ export default function LandscapeScroll() {
             className="object-cover object-[64%_50%] md:object-center"
             style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
           />
+          </div>
           {/* scrim only behind headline and supporting copy */}
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgb(20_32_26/0.68)_0%,rgb(20_32_26/0.3)_42%,transparent_70%)]" />
           {/* soft top edge for the navigation */}
@@ -266,19 +291,19 @@ export default function LandscapeScroll() {
           {/* soft floor so the bottom interface stays readable */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
-            className={`ls-head pointer-events-none absolute bottom-[calc(100lvh-100svh+7rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+            className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[12svh] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >
             <p className="ls-kicker ui-label text-[12px] text-bone">{s.kicker}</p>
             {s.reveal ? (
               // Level 1+: the brand reveal deliberately breaks the shared headline scale (~30% larger)
-              <h2 className="font-serif mt-4 text-[clamp(3.4rem,9.4vw,7.8rem)] uppercase leading-[0.9] tracking-[0.01em] text-bone [text-shadow:0_2px_36px_rgb(0_0_0/0.4)]">
-                Meet the
+              <h2 className="font-serif mt-3 text-[clamp(3.9rem,11vw,9.6rem)] leading-[0.86] tracking-[-0.02em] text-bone [text-shadow:0_2px_36px_rgb(0_0_0/0.4)]">
+                <Words text="Meet the" />
                 <br />
-                gardeners.
+                <Words text="gardeners." />
               </h2>
             ) : (
               <h2 className="font-serif mt-4 max-w-[15ch] text-[clamp(2.6rem,7.2vw,6rem)] leading-[0.98] tracking-[-0.01em] text-bone [text-shadow:0_2px_28px_rgb(0_0_0/0.35)]">
-                {s.headline}
+                <Words text={s.headline} />
               </h2>
             )}
             <p
@@ -290,18 +315,23 @@ export default function LandscapeScroll() {
         </div>
       ))}
 
+      {/* scene-change scan line */}
+      <div aria-hidden className="ls-scan pointer-events-none invisible absolute inset-x-0 z-20 h-px bg-signal/80 shadow-[0_0_18px_2px_rgb(205_238_143/0.45)] motion-reduce:hidden">
+        <span className="ls-scan-label ui-label absolute -top-6 right-5 text-[10px] text-signal md:right-14">Scanning</span>
+      </div>
+
       <ResearchMarkers />
 
       {/* mobile: the discovery as a single field chip rising from the soil */}
-      <div aria-hidden className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[72px] w-[64%] md:hidden motion-reduce:hidden">
+      <div aria-hidden className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[96px] w-[66%] md:hidden motion-reduce:hidden">
         {DISCOVERY.slice(0, 6).map((d) => (
           <div key={d.id} className="mob-chip invisible absolute bottom-0 left-0 flex gap-3 opacity-0">
             <span className="relative mt-1 w-px shrink-0 bg-sage/80">
               <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-sage bg-bone" />
             </span>
-            <span className="block rounded-[2px] border border-sage/45 bg-forest/95 px-3 py-2">
+            <span className="block border border-sage/45 bg-forest/95 px-3 py-2">
               <span className={`ui-label block text-[9px] ${d.id === "bull" ? "text-[#d1a07a]" : "text-sage"}`}>{d.kicker}</span>
-              <span className="mt-0.5 block text-[12px] font-semibold uppercase tracking-[0.16em] text-bone">{d.title}</span>
+              <span className="mt-0.5 block font-mono text-[12px] font-medium uppercase tracking-[0.04em] text-bone">{d.title}</span>
               <span className="mt-0.5 block text-[12px] leading-snug text-bone/80">{d.desc}</span>
             </span>
           </div>
@@ -315,7 +345,7 @@ export default function LandscapeScroll() {
           {DISCOVERY.map((d) => (
             <li key={d.id} className="border-t border-bone/20 pt-4">
               <p className="ui-label text-[10px] text-sage">{d.kicker}</p>
-              <p className="mt-2 text-sm font-semibold uppercase tracking-[0.16em] text-bone">{d.title}</p>
+              <p className="mt-2 font-mono text-sm font-medium uppercase tracking-[0.04em] text-bone">{d.title}</p>
               <p className="mt-1 text-bone/75">{d.desc}</p>
             </li>
           ))}

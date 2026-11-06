@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Corners from "./Corners";
 import Logo from "./Logo";
 
 export default function SiteNav() {
@@ -33,8 +34,9 @@ export default function SiteNav() {
         </p>
         <a
           href="#partner"
-          className="ui-label pointer-events-auto rounded-full border border-bone/40 px-4 py-2.5 text-bone transition-colors duration-300 hover:border-sage hover:bg-sage hover:text-forest focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sage"
+          className="ui-label group relative pointer-events-auto border border-bone/35 px-4 py-2.5 text-bone transition-colors duration-300 hover:border-signal hover:bg-signal hover:text-forest focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-signal"
         >
+          <Corners tone="bg-bone" />
           <span className="hidden sm:inline">Become a partner</span>
           <span className="sm:hidden">Partner</span>
         </a>

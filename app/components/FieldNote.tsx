@@ -239,7 +239,7 @@ export function FieldNote({ note, style }: { note: Note; style: CSSProperties })
       ref={ref}
       role="tooltip"
       style={style}
-      className="field-note pointer-events-none absolute z-30 hidden w-[364px] rounded-[3px] border border-sage/40 bg-forest/95 text-bone shadow-[0_24px_60px_-24px_rgb(0_0_0/0.75)] backdrop-blur-[2px] md:block"
+      className="field-note pointer-events-none absolute z-30 hidden w-[364px] border border-sage/40 bg-forest/95 text-bone shadow-[0_24px_60px_-24px_rgb(0_0_0/0.75)] backdrop-blur-[2px] md:block"
     >
       {/* crosshair corners, as in the key visual */}
       <span aria-hidden className="absolute -left-[6px] -top-px h-px w-3 bg-bone/70" />
@@ -265,7 +265,7 @@ export function FieldNote({ note, style }: { note: Note; style: CSSProperties })
           </div>
         </div>
         <p
-          className={`ui-label mt-3 inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[9px] ${
+          className={`ui-label mt-3 inline-flex items-center gap-2 border px-2.5 py-1 text-[9px] ${
             note.native ? "border-sage/40 text-sage" : "border-[#d1a07a]/50 text-[#d1a07a]"
           }`}
         >

@@ -174,7 +174,7 @@ export default function ResearchMarkers() {
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="xMidYMid slice"
         aria-hidden
-        className="research-layer pointer-events-none absolute inset-0 z-10 hidden h-full w-full md:block motion-reduce:hidden!"
+        className="research-layer ls-cam pointer-events-none absolute inset-0 z-10 hidden h-full w-full md:block motion-reduce:hidden!"
       >
         {/* SCENE 02 · hoof prints in the foreground */}
         <Marker id="trace" x={898} y={600} r={44} ring="dashed" leader={[[982, 520], [1080, 520]]} label="HOOF IMPRINTS" sub="FIELD TRACE / 02" onHover={onHover} />
