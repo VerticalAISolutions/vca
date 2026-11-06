@@ -299,7 +299,7 @@ export default function LandscapeScroll() {
           ) : (
             <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(12_17_25/0.66)_0%,rgb(12_17_25/0.42)_26%,rgb(12_17_25/0.12)_46%,transparent_60%)] md:block" />
           )}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[48svh] bg-gradient-to-b from-[rgb(12_17_25/0.62)] via-[rgb(12_17_25/0.3)] to-transparent md:hidden" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[60svh] bg-gradient-to-b from-[rgb(12_17_25/0.7)] via-[rgb(12_17_25/0.42)] to-transparent md:hidden" />
           {/* soft top edge for the navigation */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(15_21_30/0.5)] to-transparent" />
           {/* last scene: the image bottom settles into the night colour the next section starts with */}
@@ -323,7 +323,7 @@ export default function LandscapeScroll() {
               </h2>
             )}
             <p
-              className={`ls-body t-lead mt-auto max-w-[32ch] text-bone [text-shadow:0_1px_2px_rgb(0_0_0/0.3)] md:mt-7 motion-reduce:mt-6 ${s.reveal ? "md:max-w-[36ch]" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
+              className={`ls-body t-lead mt-5 max-w-[32ch] text-bone [text-shadow:0_1px_2px_rgb(0_0_0/0.3)] md:mt-7 motion-reduce:mt-6 ${s.reveal ? "md:max-w-[36ch]" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
             >
               {s.body}
             </p>
