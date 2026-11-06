@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import Logo from "../components/Logo";
 
-// Forest #20372d fails the voting colour check (RGB spread 23 < 25),
-// so the card uses the visually identical #203a2d.
-const PRIMAER = "#203a2d";
+// Brand base #19222e misses the voting colour check (RGB spread 21 < 25),
+// so the card uses the slightly more saturated #172436.
+const PRIMAER = "#172436";
 const DOMAIN = "https://vca-two.vercel.app";
 
 const daten = {

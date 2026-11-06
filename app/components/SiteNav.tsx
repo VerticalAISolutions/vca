@@ -1,22 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Corners from "./Corners";
 import Logo from "./Logo";
 
 export default function SiteNav() {
-  // solid background once the content sections reach the nav
+  // Solid background once the content sections come up. Driven by ScrollTrigger, not by
+  // scroll events: with inertial scrolling the content keeps moving after the last event.
+  // Starts early (approach at 60% of the viewport) so the scene's outgoing text never
+  // slides under a transparent bar.
   const [solid, setSolid] = useState(false);
   useEffect(() => {
-    const target = document.getElementById("approach");
-    if (!target) return;
-    const check = () => setSolid(target.getBoundingClientRect().top < 80);
-    check();
-    window.addEventListener("scroll", check, { passive: true });
-    window.addEventListener("resize", check);
+    let st: ScrollTrigger | undefined;
+    const id = requestAnimationFrame(() => {
+      st = ScrollTrigger.create({ trigger: "#approach", start: "top 60%", end: "max", onToggle: (self) => setSolid(self.isActive) });
+      setSolid(st.isActive);
+    });
     return () => {
-      window.removeEventListener("scroll", check);
-      window.removeEventListener("resize", check);
+      cancelAnimationFrame(id);
+      st?.kill();
     };
   }, []);
 

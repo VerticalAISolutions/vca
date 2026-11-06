@@ -64,7 +64,7 @@ export default function MissionSection() {
   );
 
   return (
-    <section ref={root} id="approach" className="relative bg-[linear-gradient(180deg,var(--color-night)_0%,#111a17_16%,#1a2c24_32%,var(--color-forest)_52%)] px-5 pt-28 text-bone md:px-14 md:pt-40">
+    <section ref={root} id="approach" className="relative bg-[linear-gradient(180deg,var(--color-night)_0%,#0e131b_16%,#141b24_32%,var(--color-forest)_52%)] px-5 pt-28 text-bone md:px-14 md:pt-40">
       <div className="mx-auto max-w-6xl">
         <Label className="text-sage">Our approach</Label>
 

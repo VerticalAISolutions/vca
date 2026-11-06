@@ -32,7 +32,7 @@ export default function FounderSection() {
                 {PHOTO ? (
                   <Image src={`/${PHOTO}`} alt="Dr. Ilka Morandt, founder of THE GARDENERS" fill sizes="(min-width: 768px) 40vw, 100vw" className="object-cover" />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_40%,#2b4a3b_0%,var(--color-forest)_70%)]">
+                  <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_40%,#24314a_0%,var(--color-forest)_70%)]">
                     <Logo className="h-1/3 w-1/3 text-sage/70" />
                   </div>
                 )}
@@ -72,7 +72,7 @@ export default function FounderSection() {
             <blockquote className="t-h2 relative">
               {/* hanging punctuation: the quote mark sits outside the text edge */}
               <span aria-hidden className="absolute -ml-[0.42em] text-earth">“</span>I spent half my life making machines better.{" "}
-              <span className="inline-block italic text-[#4f6b47]">Now it’s the earth’s turn.</span>
+              <span className="inline-block italic text-[#4a5e78]">Now it’s the earth’s turn.</span>
               <span aria-hidden className="text-earth">”</span>
             </blockquote>
             <div className="mt-8 flex items-center gap-4">

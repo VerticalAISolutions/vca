@@ -2,11 +2,11 @@
 
 /* THE GARDENERS · brand tokens (brand board) */
 @theme {
-  --color-forest: #20372d;
+  --color-forest: #19222e; /* brand base: dark desaturated slate blue (hue of the image skies) */
   --color-bone: #f0ede2;
   --color-sage: #a0b38b;
   --color-earth: #b07c55;
-  --color-forest-deep: #172821;
+  --color-forest-deep: #111822;
   /* bottom edge of scene 05 (blue hour), measured from the image: the seam colour */
   --color-night: #090a0f;
   /* bioluminescent signal, taken from the glowing root network: live data only */

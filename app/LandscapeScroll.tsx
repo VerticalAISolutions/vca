@@ -295,13 +295,13 @@ export default function LandscapeScroll() {
           </div>
           {/* reading light: a soft veil from the text side (desktop) / from the top (mobile), no text shadows */}
           {s.center ? (
-            <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_62%_48%_at_50%_24%,rgb(14_24_19/0.55)_0%,rgb(14_24_19/0.28)_55%,transparent_100%)] md:block" />
+            <div className="pointer-events-none absolute inset-0 hidden bg-[radial-gradient(ellipse_62%_48%_at_50%_24%,rgb(12_17_25/0.55)_0%,rgb(12_17_25/0.28)_55%,transparent_100%)] md:block" />
           ) : (
-            <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(14_24_19/0.66)_0%,rgb(14_24_19/0.42)_26%,rgb(14_24_19/0.12)_46%,transparent_60%)] md:block" />
+            <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(12_17_25/0.66)_0%,rgb(12_17_25/0.42)_26%,rgb(12_17_25/0.12)_46%,transparent_60%)] md:block" />
           )}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[48svh] bg-gradient-to-b from-[rgb(14_24_19/0.62)] via-[rgb(14_24_19/0.3)] to-transparent md:hidden" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[48svh] bg-gradient-to-b from-[rgb(12_17_25/0.62)] via-[rgb(12_17_25/0.3)] to-transparent md:hidden" />
           {/* soft top edge for the navigation */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(20_32_26/0.5)] to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(15_21_30/0.5)] to-transparent" />
           {/* last scene: the image bottom settles into the night colour the next section starts with */}
           {i === STATES.length - 1 ? <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent" /> : null}
           {/* soft floor so the bottom interface stays readable */}

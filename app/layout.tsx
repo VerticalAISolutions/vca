@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     "THE GARDENERS bring extinct large herbivores back to protected landscapes, where they restore living systems. Become a restoration partner.",
 };
 
-export const viewport: Viewport = { themeColor: "#20372d" };
+export const viewport: Viewport = { themeColor: "#19222e" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
