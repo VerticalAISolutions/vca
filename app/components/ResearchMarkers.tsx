@@ -176,36 +176,37 @@ export default function ResearchMarkers() {
         aria-hidden
         className="research-layer ls-cam pointer-events-none absolute inset-0 z-10 hidden h-full w-full md:block motion-reduce:hidden!"
       >
-        {/* SCENE 02 · hoof prints in the foreground */}
-        <Marker id="trace" x={898} y={600} r={44} ring="dashed" leader={[[982, 520], [1080, 520]]} label="HOOF IMPRINTS" sub="FIELD TRACE / 02" onHover={onHover} />
+        {/* SCENE 02 · fresh hoof print at the soil edge */}
+        <Marker id="trace" x={1045} y={698} r={44} ring="dashed" leader={[[1110, 620], [1200, 620]]} label="HOOF IMPRINT" sub="FIELD TRACE / 02" onHover={onHover} />
 
-        {/* SCENE 03 · the dominant aurochs. Anchored at the rump, line runs above the horns. */}
+        {/* SCENE 03 · the bull, anchored on the flank, label in the open sky to the right */}
         <g className="mk mk-bull" opacity={0} visibility="hidden">
-          <Brackets x1={884} y1={278} x2={1286} y2={566} />
-          <Marker nested id="bull-inner" note="bull" x={978} y={378} r={12} leader={[[1010, 252], [1150, 252]]} kicker="01 / Species · Reintroduced" tone="earth" label="BOS PRIMIGENIUS" sub="ECOSYSTEM ENGINEER" onHover={onHover} />
+          <Brackets x1={860} y1={118} x2={1300} y2={628} />
+          <Marker nested id="bull-inner" note="bull" x={1150} y={390} r={12} leader={[[1240, 300], [1340, 300]]} kicker="01 / Species · Reintroduced" tone="earth" label="BOS PRIMIGENIUS" sub="ECOSYSTEM ENGINEER" onHover={onHover} />
         </g>
 
-        {/* SCENE 03 → 04 · guide from the animal down to the soil horizon, then the horizon opens */}
+        {/* SCENE 03 → 04 · guide from the animal down to the ground line, then the horizon opens */}
         <g className="mk-link" opacity={0} visibility="hidden">
-          <path className="mk-link-drop" d="M 1034 566 L 1034 700" pathLength={1} fill="none" stroke="var(--color-sage)" strokeOpacity={0.9} strokeWidth={1} vectorEffect="non-scaling-stroke" />
-          <circle cx={1034} cy={566} r={3} fill="var(--color-bone)" />
+          <path className="mk-link-drop" d="M 1125 540 L 1125 684" pathLength={1} fill="none" stroke="var(--color-signal)" strokeOpacity={0.9} strokeWidth={1} vectorEffect="non-scaling-stroke" />
+          <circle cx={1125} cy={540} r={3} fill="var(--color-bone)" />
         </g>
         <g className="mk-horizon" opacity={0} visibility="hidden">
-          <path className="mk-horizon-l" d="M 1034 700 L 150 700" pathLength={1} fill="none" stroke="var(--color-bone)" strokeOpacity={0.55} strokeWidth={1} strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
-          <path className="mk-horizon-r" d="M 1034 700 L 1560 700" pathLength={1} fill="none" stroke="var(--color-bone)" strokeOpacity={0.55} strokeWidth={1} strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
-          <circle cx={1034} cy={700} r={4} fill="none" stroke="var(--color-sage)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-          <circle cx={1034} cy={700} r={1.8} fill="var(--color-bone)" />
-          <text className="mk-horizon-t mk-k" x={160} y={690} textAnchor="start">
+          <path className="mk-horizon-l" d="M 1125 684 L 150 684" pathLength={1} fill="none" stroke="var(--color-bone)" strokeOpacity={0.55} strokeWidth={1} strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
+          <path className="mk-horizon-r" d="M 1125 684 L 1560 684" pathLength={1} fill="none" stroke="var(--color-bone)" strokeOpacity={0.55} strokeWidth={1} strokeDasharray="1 1" vectorEffect="non-scaling-stroke" />
+          <circle cx={1125} cy={684} r={4} fill="none" stroke="var(--color-signal)" strokeWidth={1} vectorEffect="non-scaling-stroke" />
+          <circle cx={1125} cy={684} r={1.8} fill="var(--color-bone)" />
+          <text className="mk-horizon-t mk-k" x={160} y={674} textAnchor="start">
             Existing soil life
           </text>
         </g>
 
-        {/* ECOLOGICAL NETWORK REVEAL · boxes rise from their anchor, in order of appearance */}
-        <Marker id="grazing" x={1252} y={612} r={14} ring="dashed" leader={[[1300, 652], [1330, 652]]} kicker="02 / Grazing" label="HABITAT DIVERSITY" desc={["Grazing helps shape", "varied vegetation."]} onHover={onHover} />
-        <Marker id="roots" x={412} y={790} r={16} leader={[[412, 640], [440, 640]]} kicker="03 / Root system" label="ROOT NETWORK" desc={["Plant roots connect", "vegetation and soil."]} onHover={onHover} />
-        <Marker id="fungi" x={850} y={765} r={16} ring="dashed" leader={[[850, 652], [880, 652]]} kicker="04 / Fungal networks" label="MYCELIAL NETWORK" desc={["Fungi contribute to", "nutrient cycling."]} onHover={onHover} />
-        <Marker id="fauna" x={1100} y={802} r={14} leader={[[1100, 738], [1130, 738]]} kicker="05 / Soil biology" label="SOIL FAUNA" desc={["Organisms recycle", "organic material."]} onHover={onHover} />
-        <Marker id="decomp" x={740} y={792} r={16} ring="dashed" leader={[[740, 752], [710, 752]]} kicker="06 / Soil processes" label="DECOMPOSITION" desc={["Organic matter returns", "nutrients to the soil."]} onHover={onHover} />
+        {/* ECOLOGICAL NETWORK REVEAL · boxes rise from their anchors; retired boxes leave their ring behind */}
+        <Marker id="roots" x={398} y={782} r={16} leader={[[455, 782], [480, 782]]} kicker="02 / Root system" label="ROOT NETWORK" desc={["Plant roots connect", "vegetation and soil."]} onHover={onHover} />
+        <Marker id="grazing" x={432} y={552} r={14} ring="dashed" leader={[[470, 560], [490, 560]]} kicker="03 / Grazing" label="HABITAT DIVERSITY" desc={["Grazing helps shape", "varied vegetation."]} onHover={onHover} />
+        <Marker id="seed" x={672} y={792} r={14} leader={[[720, 860], [745, 860]]} kicker="04 / Seed dispersal" label="GERMINATION" desc={["Hooves press seeds", "into the soil."]} onHover={onHover} />
+        <Marker id="fungi" x={815} y={796} r={16} ring="dashed" leader={[[815, 640], [785, 640]]} kicker="05 / Fungal networks" label="MYCELIAL NETWORK" desc={["Fungi contribute to", "nutrient cycling."]} onHover={onHover} />
+        <Marker id="fauna" x={1300} y={815} r={16} leader={[[1300, 740], [1270, 740]]} kicker="06 / Soil biology" label="SOIL FAUNA" desc={["Organisms recycle", "organic material."]} onHover={onHover} />
+        <Marker id="decomp" x={1028} y={872} r={14} ring="dashed" leader={[[960, 872], [935, 872]]} kicker="07 / Soil processes" label="DECOMPOSITION" desc={["Dung beetles return", "nutrients to the soil."]} onHover={onHover} />
       </svg>
 
       {note && hover ? (

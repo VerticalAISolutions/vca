@@ -16,7 +16,7 @@ export function RestorationSignal() {
   return (
     <div className="hud-signal pointer-events-none absolute bottom-8 left-14 z-20 hidden select-none md:block motion-reduce:hidden!">
       <p className="sig-note mb-3 max-w-[230px] text-[12px] leading-snug text-bone opacity-0 [text-shadow:0_1px_3px_rgb(0_0_0/0.9),0_0_14px_rgb(0_0_0/0.7)]">
-        <span className="ui-label block text-[10px] text-sage">07 / Restoration</span>
+        <span className="ui-label block text-[10px] text-sage">08 / Restoration</span>
         Connected processes support ecosystem recovery.
       </p>
       <p className="ui-label text-bone">RESTORATION</p>

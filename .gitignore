@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# image generation: raw outputs stay local, prompts + script are versioned
+/gen/out

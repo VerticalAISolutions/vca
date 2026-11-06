@@ -10,8 +10,8 @@ import { ChapterIndicator, RestorationSignal } from "./components/SceneHud";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// Bildsatz wechseln: "/landscape" (Idee 1) oder "/landscape/idea2"
-const SET = "/landscape/idea2";
+// Bildsatz "Fixpunkt": eine feste Kamera, fünf Zeitpunkte (gen/prompts)
+const SET = "/landscape/fixpoint";
 
 // Future Lab Look: Gradient-Map (Forest → Sage → Bone) als SVG-Filter auf Szene 1–4.
 // Bilddateien bleiben unverändert. false = Originalfarben.
@@ -21,37 +21,37 @@ type Scene = { src: string; alt: string; kicker: string; headline: string; body:
 
 const STATES: Scene[] = [
   {
-    src: `${SET}/state-1.png`,
-    alt: "Stille, karge Steppe mit trockenem Boden im Querschnitt",
+    src: `${SET}/state-1.webp`,
+    alt: "Fester Beobachtungspunkt in kalter, bedeckter Dämmerung: totes Gras, im Querschnitt karger, verdichteter Boden",
     kicker: "01 — The Silence",
     headline: "Nature has lost its gardeners.",
     body: "We bring back extinct animals that once shaped entire ecosystems.",
   },
   {
-    src: `${SET}/state-2.png`,
-    alt: "Erste Fußspuren im Gras, im Boden regt sich Leben",
+    src: `${SET}/state-2.webp`,
+    alt: "Dieselbe Stelle bei Sonnenaufgang: frische Hufspuren im trockenen Gras, darunter ein Regenwurm auf dem Weg nach oben",
     kicker: "02 — The Traces",
     headline: "But the land remembers.",
     body: "Once, great wild grazers shaped these landscapes. Their disappearance left more than empty space.",
   },
   {
-    src: `${SET}/state-3.png`,
-    alt: "Eine Auerochsenherde kehrt in die Steppe zurück",
+    src: `${SET}/state-3.webp`,
+    alt: "Ein Auerochsenbulle im Gegenlicht der aufgehenden Sonne, die Herde im Bodennebel, darunter noch ausgelaugter Boden",
     kicker: "03 — The Return",
     headline: "Meet the gardeners.",
     body: "These are aurochs. Extinct wild cattle that once helped shape European landscapes. We are bringing them back.",
     reveal: true,
   },
   {
-    src: `${SET}/state-4.png`,
-    alt: "Goldene Aue mit Auerochsen, darunter lebendiges, durchwurzeltes Erdreich",
+    src: `${SET}/state-4.webp`,
+    alt: "Derselbe Moment Jahre später: blühende Wiese, unter dem Hufabdruck keimt ein Samen, Pilzgeflecht, Mistkäfer und Regenwurm im lebendigen Boden",
     kicker: "04 — The Revival",
     headline: "Their return is just the beginning.",
     body: "Their grazing and movement help restart natural processes. Protected habitats, research and long-term stewardship give ecosystems the conditions to recover.",
   },
   {
-    src: `${SET}/state-5.png`,
-    alt: "Das Ökosystem in Forest-Grün: Auerochsen, Wurzeln und Pilzgeflecht als lebendiges Netzwerk unter dem Blattsymbol der Marke",
+    src: `${SET}/state-5.webp`,
+    alt: "Blaue Stunde: der Auerochse als Silhouette, im Boden leuchtet das Pilzgeflecht biolumineszent, Glühwürmchen im Gras",
     kicker: "The Gardeners · Our mission",
     headline: "Bring back what brings life.",
     body: "We bring back extinct species, restore protected habitats and work with scientists and conservation partners to rebuild living ecosystems.",
@@ -62,12 +62,13 @@ const STATES: Scene[] = [
 // reduced motion) and as a one-at-a-time field chip on mobile.
 const DISCOVERY = [
   { id: "bull", kicker: "01 / Species · Reintroduced", title: "Bos primigenius", desc: "Ecosystem engineer. Extinct wild cattle, returning." },
-  { id: "grazing", kicker: "02 / Grazing", title: "Habitat diversity", desc: "Grazing helps shape varied vegetation." },
-  { id: "roots", kicker: "03 / Root system", title: "Root network", desc: "Plant roots connect vegetation and soil." },
-  { id: "fungi", kicker: "04 / Fungal networks", title: "Mycelial network", desc: "Fungi contribute to nutrient cycling." },
-  { id: "fauna", kicker: "05 / Soil biology", title: "Soil fauna", desc: "Organisms recycle organic material." },
-  { id: "decomp", kicker: "06 / Soil processes", title: "Decomposition", desc: "Organic matter returns nutrients to the soil." },
-  { id: "recovery", kicker: "07 / Restoration", title: "Ecological recovery", desc: "Connected processes support ecosystem recovery." },
+  { id: "roots", kicker: "02 / Root system", title: "Root network", desc: "Plant roots connect vegetation and soil." },
+  { id: "grazing", kicker: "03 / Grazing", title: "Habitat diversity", desc: "Grazing helps shape varied vegetation." },
+  { id: "seed", kicker: "04 / Seed dispersal", title: "Germination", desc: "Hooves press seeds into the soil." },
+  { id: "fungi", kicker: "05 / Fungal networks", title: "Mycelial network", desc: "Fungi contribute to nutrient cycling." },
+  { id: "fauna", kicker: "06 / Soil biology", title: "Soil fauna", desc: "Organisms recycle organic material." },
+  { id: "decomp", kicker: "07 / Soil processes", title: "Decomposition", desc: "Dung beetles return nutrients to the soil." },
+  { id: "recovery", kicker: "08 / Restoration", title: "Ecological recovery", desc: "Connected processes support ecosystem recovery." },
 ];
 
 // Timeline in abstract units. Scene holds sit between the image crossfades.
@@ -191,22 +192,27 @@ export default function LandscapeScroll() {
           .fromTo(q(".mk-horizon"), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1 }, D + 0.3)
           .fromTo(q(".mk-horizon-l, .mk-horizon-r"), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.6 }, D + 0.3)
           .fromTo(q(".mk-horizon-t"), { opacity: 0 }, { opacity: 1, duration: 0.25 }, D + 0.65);
-        // field boxes rise from their anchors, never more than three prominent at once
+        // field boxes rise from their anchors; a retired box leaves its ring as an observation point
+        const F = FADES[2];
         const SEQ: [string, number][] = [
-          ["grazing", D + 0.5],
-          ["roots", D + 0.85],
-          ["fungi", FADES[2] + 0.5],
-          ["fauna", FADES[2] + 0.9],
-          ["decomp", FADES[2] + 1.3],
+          ["roots", D + 0.5],
+          ["grazing", F + 0.3],
+          ["seed", F + 0.7],
+          ["fungi", F + 1.1],
+          ["fauna", F + 1.5],
+          ["decomp", F + 1.9],
         ];
         SEQ.forEach(([id, at]) => markerIn(`.mk-${id}`, at));
-        understate(".mk-bull", SEQ[2][1]);
-        understate(".mk-grazing", SEQ[3][1]);
-        understate(".mk-roots", SEQ[4][1]);
-        markerOut(".mk-link", FADES[2], 0.4);
+        const retire = (id: string, at: number) => tl.to(q(`.mk-${id} .mk-label, .mk-${id} .mk-line`), { opacity: 0, duration: 0.3 }, at);
+        retire("roots", SEQ[2][1]);
+        retire("grazing", SEQ[3][1]);
+        retire("seed", SEQ[4][1]);
+        retire("fungi", SEQ[5][1]);
+        understate(".mk-bull", SEQ[1][1]);
+        markerOut(".mk-link", F, 0.4);
         // quiet hold: overlays recede, the horizon stays as one faint connection
-        const quiet = FADES[2] + 2.4;
-        markerOut(".mk-bull, .mk-grazing, .mk-roots, .mk-fungi, .mk-fauna, .mk-decomp", quiet, 0.5);
+        const quiet = F + 2.6;
+        markerOut(".mk-bull, .mk-roots, .mk-grazing, .mk-seed, .mk-fungi, .mk-fauna, .mk-decomp", quiet, 0.5);
         tl.to(q(".mk-horizon"), { opacity: 0.35, duration: 0.5 }, quiet);
         markerOut(".mk-horizon", FADES[3], 0.5);
 
@@ -231,8 +237,8 @@ export default function LandscapeScroll() {
           .to(q(".sig-node-3"), { opacity: 1, duration: 0.25 }, D + 0.7)
           .to(q(".sig-line"), { strokeDashoffset: 0, duration: 0.9 }, FADES[2] + 0.8)
           .to(q(".sig-echo"), { strokeDashoffset: 0, duration: 0.7 }, FADES[2] + 1.0)
-          .to(q(".sig-node-4"), { opacity: 1, duration: 0.25 }, FADES[2] + 1.6)
-          .fromTo(q(".sig-note"), { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3 }, FADES[2] + 1.7);
+          .to(q(".sig-node-4"), { opacity: 1, duration: 0.25 }, FADES[2] + 2.0)
+          .fromTo(q(".sig-note"), { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3 }, FADES[2] + 2.1);
 
         tl.to({}, { duration: 0.01 }, TOTAL - 0.01); // final clean hold
         updateChapter(0);
@@ -280,7 +286,7 @@ export default function LandscapeScroll() {
             fill
             priority={i === 0}
             sizes="100vw"
-            className="object-cover object-[64%_50%] md:object-center"
+            className="object-cover object-[60%_50%] md:object-center"
             style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
           />
           </div>
@@ -324,7 +330,7 @@ export default function LandscapeScroll() {
 
       {/* mobile: the discovery as a single field chip rising from the soil */}
       <div aria-hidden className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[96px] w-[66%] md:hidden motion-reduce:hidden">
-        {DISCOVERY.slice(0, 6).map((d) => (
+        {DISCOVERY.slice(0, 7).map((d) => (
           <div key={d.id} className="mob-chip invisible absolute bottom-0 left-0 flex gap-3 opacity-0">
             <span className="relative mt-1 w-px shrink-0 bg-sage/80">
               <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-sage bg-bone" />
