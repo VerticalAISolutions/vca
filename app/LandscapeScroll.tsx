@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Label from "./components/Label";
 import ResearchMarkers from "./components/ResearchMarkers";
+import { LOADED_EVENT } from "./components/Preloader";
 import { ChapterIndicator, RestorationSignal } from "./components/SceneHud";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -247,9 +248,19 @@ export default function LandscapeScroll() {
         updateChapter(0);
 
         // --- intro: the first headline rises on load ---
+        // waits for the preloader curtain when it is still up
         if (window.scrollY < 10) {
-          gsap.from(words(0), { yPercent: 115, duration: 1.1, stagger: 0.07, ease: "power4.out", delay: 0.15 });
-          gsap.from(q(".ls-head-0 .ls-kicker, .ls-head-0 .ls-body"), { opacity: 0, y: 12, duration: 0.9, stagger: 0.5, ease: "power2.out", delay: 0.3 });
+          const intro = gsap
+            .timeline({ paused: true })
+            .from(words(0), { yPercent: 115, duration: 1.1, stagger: 0.07, ease: "power4.out" }, 0.15)
+            .from(q(".ls-head-0 .ls-kicker, .ls-head-0 .ls-body"), { opacity: 0, y: 12, duration: 0.9, stagger: 0.5, ease: "power2.out" }, 0.3);
+          const loaded = (window as unknown as { __gardenersLoaded?: boolean }).__gardenersLoaded;
+          if (loaded || !document.getElementById("preloader")) intro.play();
+          else {
+            const play = () => intro.play();
+            window.addEventListener(LOADED_EVENT, play, { once: true });
+            return () => window.removeEventListener(LOADED_EVENT, play);
+          }
         }
       });
     },
