@@ -1,12 +1,13 @@
 "use client";
 
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Label from "./components/Label";
 import ResearchMarkers from "./components/ResearchMarkers";
+import { FieldNote, NOTES } from "./components/FieldNote";
 import { LOADED_EVENT } from "./components/Preloader";
 import { ChapterIndicator, RestorationSignal } from "./components/SceneHud";
 
@@ -95,6 +96,69 @@ function Words({ text }: { text: string }) {
       {i < a.length - 1 ? " " : null}
     </Fragment>
   ));
+}
+
+// mobile: the discovery as a single field chip rising from the soil. A tap opens the
+// full field note (the desktop hover sheet) docked to the bottom; scrolling on closes it.
+// Own component so opening a note never re-renders the GSAP-driven scene.
+function MobileDiscovery() {
+  const [open, setOpen] = useState<string | null>(null);
+  const note = open ? NOTES[open] : null;
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: Event) => {
+      if ((e.target as HTMLElement | null)?.closest?.(".fn-sheet")) return;
+      setOpen(null);
+    };
+    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    window.addEventListener("touchmove", close, { passive: true });
+    window.addEventListener("wheel", close, { passive: true });
+    window.addEventListener("keydown", esc);
+    return () => {
+      window.removeEventListener("touchmove", close);
+      window.removeEventListener("wheel", close);
+      window.removeEventListener("keydown", esc);
+    };
+  }, [open]);
+
+  return (
+    <div className="md:hidden motion-reduce:hidden">
+      <div className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[96px] w-[66%]">
+        {DISCOVERY.slice(0, 7).map((d) => (
+          <button
+            key={d.id}
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={open === d.id}
+            onClick={() => setOpen(d.id)}
+            className="mob-chip pointer-events-auto invisible absolute bottom-0 left-0 flex gap-3 text-left opacity-0"
+          >
+            <span aria-hidden className="relative mt-1 w-px shrink-0 bg-sage/80">
+              <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-sage bg-bone" />
+            </span>
+            <span className="relative block border border-sage/45 bg-forest/95 py-2 pl-3 pr-10 transition-colors active:border-sage active:bg-forest">
+              <span className={`ui-label block text-[9px] ${d.id === "bull" ? "text-[#d1a07a]" : "text-sage"}`}>{d.kicker}</span>
+              <span className="mt-0.5 block font-mono text-[12px] font-medium uppercase tracking-[0.04em] text-bone">{d.title}</span>
+              <span className="mt-0.5 block text-[12px] leading-snug text-bone/80">{d.desc}</span>
+              {/* tap affordance: a small open-sheet mark in the corner */}
+              <span aria-hidden className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center border border-sage/50 text-sage">
+                <svg viewBox="0 0 10 10" className="h-2.5 w-2.5">
+                  <path d="M5 0.5 V9.5 M0.5 5 H9.5" stroke="currentColor" strokeWidth={1.2} />
+                </svg>
+              </span>
+            </span>
+          </button>
+        ))}
+      </div>
+      {note ? (
+        <>
+          <button type="button" aria-label="Close field note" onClick={() => setOpen(null)} className="absolute inset-0 z-30 bg-black/45" />
+          <FieldNote key={open} note={note} sheet onClose={() => setOpen(null)} />
+        </>
+      ) : null}
+    </div>
+  );
 }
 
 export default function LandscapeScroll() {
@@ -362,21 +426,7 @@ export default function LandscapeScroll() {
 
       <ResearchMarkers />
 
-      {/* mobile: the discovery as a single field chip rising from the soil */}
-      <div aria-hidden className="pointer-events-none absolute bottom-[calc(100lvh-100svh+1.75rem)] left-5 z-20 h-[96px] w-[66%] md:hidden motion-reduce:hidden">
-        {DISCOVERY.slice(0, 7).map((d) => (
-          <div key={d.id} className="mob-chip invisible absolute bottom-0 left-0 flex gap-3 opacity-0">
-            <span className="relative mt-1 w-px shrink-0 bg-sage/80">
-              <span className="absolute -bottom-1 -left-[3px] h-[7px] w-[7px] rounded-full border border-sage bg-bone" />
-            </span>
-            <span className="block border border-sage/45 bg-forest/95 px-3 py-2">
-              <span className={`ui-label block text-[9px] ${d.id === "bull" ? "text-[#d1a07a]" : "text-sage"}`}>{d.kicker}</span>
-              <span className="mt-0.5 block font-mono text-[12px] font-medium uppercase tracking-[0.04em] text-bone">{d.title}</span>
-              <span className="mt-0.5 block text-[12px] leading-snug text-bone/80">{d.desc}</span>
-            </span>
-          </div>
-        ))}
-      </div>
+      <MobileDiscovery />
 
       {/* the same field notes as text: screen readers always, visible when motion is reduced */}
       <section aria-label="Field observations" className="sr-only motion-reduce:not-sr-only motion-reduce:bg-forest motion-reduce:px-5 motion-reduce:py-16 md:motion-reduce:px-14">

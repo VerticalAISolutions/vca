@@ -235,14 +235,19 @@ function Sparkline({ data }: { data: number[] }) {
   );
 }
 
-export function FieldNote({ note, style }: { note: Note; style: CSSProperties }) {
+type FieldNoteProps =
+  | { note: Note; style: CSSProperties; sheet?: false; onClose?: never }
+  // mobile: the same data sheet, opened by tapping a field chip, docked to the bottom of the stage
+  | { note: Note; style?: never; sheet: true; onClose: () => void };
+
+export function FieldNote({ note, style, sheet, onClose }: FieldNoteProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   // keep the sheet inside the stage (below the nav), nudging via the CSS translate property
   useLayoutEffect(() => {
     const el = ref.current;
     const stage = el?.offsetParent as HTMLElement | null;
-    if (!el || !stage) return;
+    if (sheet || !el || !stage) return;
     el.style.translate = ""; // measure the unnudged position (effects may run twice in dev)
     const r = el.getBoundingClientRect();
     const p = stage.getBoundingClientRect();
@@ -254,15 +259,32 @@ export function FieldNote({ note, style }: { note: Note; style: CSSProperties })
     if (r.bottom > p.bottom - pad) dy = p.bottom - pad - r.bottom;
     if (r.top + dy < p.top + 88) dy = p.top + 88 - r.top;
     el.style.translate = `${dx}px ${dy}px`;
-  }, []);
+  }, [sheet]);
 
   return (
     <div
       ref={ref}
-      role="tooltip"
+      role={sheet ? "dialog" : "tooltip"}
+      aria-label={sheet ? `Field note: ${note.title}` : undefined}
       style={style}
-      className="field-note pointer-events-none absolute z-30 hidden w-[364px] border border-sage/40 bg-forest/95 text-bone shadow-[0_24px_60px_-24px_rgb(0_0_0/0.75)] backdrop-blur-[2px] md:block"
+      className={`field-note absolute z-30 border border-sage/40 bg-forest/95 text-bone shadow-[0_24px_60px_-24px_rgb(0_0_0/0.75)] backdrop-blur-[2px] ${
+        sheet
+          ? "fn-sheet pointer-events-auto inset-x-3 bottom-[calc(100lvh-100svh+0.75rem)] max-h-[calc(100svh-6.5rem)] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:none] md:hidden"
+          : "pointer-events-none hidden w-[364px] md:block"
+      }`}
     >
+      {sheet ? (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close field note"
+          className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center text-bone/80 active:text-bone"
+        >
+          <svg viewBox="0 0 14 14" className="h-3.5 w-3.5" aria-hidden>
+            <path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" strokeWidth={1.3} />
+          </svg>
+        </button>
+      ) : null}
       {/* crosshair corners, as in the key visual */}
       <span aria-hidden className="absolute -left-[6px] -top-px h-px w-3 bg-bone/70" />
       <span aria-hidden className="absolute -left-px -top-[6px] h-3 w-px bg-bone/70" />
@@ -270,7 +292,7 @@ export function FieldNote({ note, style }: { note: Note; style: CSSProperties })
       <span aria-hidden className="absolute -bottom-[6px] -right-px h-3 w-px bg-bone/70" />
 
       {/* record header */}
-      <div className="flex items-center justify-between border-b border-bone/12 px-5 py-2.5">
+      <div className={`flex items-center justify-between border-b border-bone/12 px-5 py-2.5 ${sheet ? "pr-12" : ""}`}>
         <span className="ui-label flex items-center gap-2 whitespace-nowrap text-[9px] text-bone/80">
           <span aria-hidden className="fn-live relative h-1.5 w-1.5 shrink-0 rounded-full bg-sage" />
           Live · {note.code}
