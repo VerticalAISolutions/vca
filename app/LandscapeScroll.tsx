@@ -293,16 +293,29 @@ export default function LandscapeScroll() {
           key={s.src}
           className={`ls-layer absolute inset-0 overflow-hidden motion-reduce:relative motion-reduce:h-svh ${i > 0 ? "ls-wipe" : ""}`}
         >
+          {/* mobile: the sky above the photo is the same image, soft and dark, so the text has calm ground */}
+          <div aria-hidden className="absolute inset-0 overflow-hidden md:hidden">
+            <Image
+              src={s.src}
+              alt=""
+              fill
+              sizes="200px"
+              className="scale-125 object-cover object-[62%_0%] blur-2xl brightness-[0.62] saturate-[0.85]"
+            />
+          </div>
           <div className="ls-cam absolute inset-0 will-change-transform">
-          <Image
-            src={s.src}
-            alt={s.alt}
-            fill
-            priority={i === 0}
-            sizes="100vw"
-            className="object-cover object-[60%_50%] md:object-center"
-            style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
-          />
+            {/* mobile: a wide window anchored to the ground (animal + soil section stay in frame); desktop: full bleed */}
+            <div className="ls-photo absolute inset-x-0 bottom-0 top-[var(--ls-photo-top)] md:inset-0">
+              <Image
+                src={s.src}
+                alt={s.alt}
+                fill
+                priority={i === 0}
+                sizes="(max-width: 767px) 190vw, 100vw"
+                className="object-cover object-[64%_100%] md:object-center"
+                style={FUTURE_LAB && i < STATES.length - 1 ? { filter: "url(#future-lab)" } : undefined}
+              />
+            </div>
           </div>
           {/* reading light: a soft veil from the text side (desktop) / from the top (mobile), no text shadows */}
           {s.center ? (
@@ -310,13 +323,13 @@ export default function LandscapeScroll() {
           ) : (
             <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(90deg,rgb(12_17_25/0.66)_0%,rgb(12_17_25/0.42)_26%,rgb(12_17_25/0.12)_46%,transparent_60%)] md:block" />
           )}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[60svh] bg-gradient-to-b from-[rgb(12_17_25/0.7)] via-[rgb(12_17_25/0.42)] to-transparent md:hidden" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[50svh] bg-gradient-to-b from-[rgb(12_17_25/0.5)] via-[rgb(12_17_25/0.22)] to-transparent md:hidden" />
           {/* soft top edge for the navigation */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[rgb(15_21_30/0.5)] to-transparent" />
           {/* last scene: the image bottom settles into the night colour the next section starts with */}
           {i === STATES.length - 1 ? <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent" /> : null}
           {/* soft floor so the bottom interface stays readable */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(42svh+100lvh-100svh)] bg-gradient-to-t from-black/60 via-black/25 to-transparent md:h-40 md:via-transparent md:from-black/45" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[calc(22svh+100lvh-100svh)] bg-gradient-to-t from-black/50 via-black/15 to-transparent md:h-40 md:via-transparent md:from-black/45" />
           <div
             className={`ls-head ls-head-${i} pointer-events-none absolute bottom-[calc(100lvh-100svh+8.75rem)] left-5 right-5 top-[calc(12svh+1.75rem)] flex flex-col md:bottom-auto md:left-14 md:top-[15svh] md:block ${s.center ? "ls-center md:right-14" : ""} ${s.reveal ? "ls-reveal" : ""} ${i > 0 ? "motion-safe:opacity-0" : ""}`}
           >

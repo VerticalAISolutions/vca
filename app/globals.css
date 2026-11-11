@@ -105,6 +105,40 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* mobile scene photo: a wide window on the lower part of the screen,
+   its top edge dissolves into the blurred sky behind the headline */
+.ls-layer {
+  --ls-photo-top: max(38svh, 17rem);
+}
+@media (max-width: 767px) {
+  .ls-photo {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+  }
+}
+/* short phones (iPhone SE & co): tighter scene copy, so the horns stay clear of the text */
+@media (max-width: 767px) and (max-height: 720px) {
+  .ls-layer {
+    --ls-photo-top: 43svh;
+  }
+  .ls-head {
+    top: calc(10svh + 1.5rem);
+  }
+  .ls-head .t-h1 {
+    font-size: 2.55rem;
+  }
+  .ls-head .t-display {
+    font-size: 3.6rem;
+  }
+  .ls-head .ls-body {
+    margin-top: 0.9rem;
+    font-size: 1rem;
+  }
+  .ls-head .ls-kicker + h2 {
+    margin-top: 0.9rem;
+  }
+}
+
 /* scene change: the next landscape rises from the ground with a soft edge (GSAP drives --wipe) */
 @media (prefers-reduced-motion: no-preference) {
   .ls-wipe {
